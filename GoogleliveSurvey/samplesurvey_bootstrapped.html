@@ -1,0 +1,85 @@
+ <head>
+    <meta charset=utf-8 />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Live Sample Survey</title>
+
+    <link rel='stylesheet' href='style.css' />
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.js'></script>
+    <link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+    <base target="_parent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+    h2 {
+  font-family: 'Open Sans', sans-serif;
+  color: #3887be;
+  font-size: 1.5em !important;
+  font-weight: bold;
+
+}
+   #loading{
+    top:20px;
+    position: absolute; 
+    left: 20px; 
+    width:200px;
+    height: 200px;
+    z-index: -400
+   }
+
+    </style>
+
+  </head>
+  <body>
+
+  <head>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-6">
+                <br><br>
+                <iframe id="theIframe"  src="ownform.html" width="100%" height="350px" frameborder="0" marginheight="0">Loading...</iframe>
+            </div>
+            <div class="col-md-6" id="viewgraph">
+            <h2 id='questionTitle'>During the past 7 days, on how many days did you eat fast food?</h1>
+
+              <canvas id="myChart1"></canvas>
+            </div>
+
+        </div>
+        <div class="row">
+        </div>
+        <div class="row">
+            <div class="col-md-6"><h2 id='questionTitle'>Have you ever served on active duty in the U.S. Armed Forces?</h1></div>
+            <div class="col-md-6"><h2 id='questionTitle'>What type of construction best describes your home?</h1></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6" id="viewgraph">
+              <canvas id="myChart2"></canvas>
+            </div>
+            <div class="col-md-6" id="viewgraph">
+              <canvas id="myChart3"></canvas>
+            </div>
+        </div>
+    </div>
+
+<!--     <div id = "loading">
+        <img src="loading.gif">
+    </div> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.js'></script>
+    <script src="https://use.fontawesome.com/07d36eac3e.js"></script>
+    <script src="http://cdn.jsdelivr.net/leaflet.esri/1.0.0/esri-leaflet.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+
+  </body>
+</html>

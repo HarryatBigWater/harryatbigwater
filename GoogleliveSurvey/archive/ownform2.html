@@ -1,0 +1,412 @@
+<html>
+<header>
+ <style>
+     /* GENERAL https://codepen.io/learningcode/post/customize-a-google-form-for-your-website*/
+body {
+  background: white;
+  font-family: 'open sans', sans-serif;
+  letter-spacing: 0.5px;
+  color: #FF00FF !important;
+}
+*:focus {
+  outline-color: #00BF8F;
+}
+
+/* SECTION WRAPPER */
+.wrapper {
+  width: 95%;
+  margin: 0 auto;
+}
+
+/* TYPOGRAPHY */ 
+h2 {
+  font-family: 'Open Sans', sans-serif;
+  color: #3887be;
+}
+form p {
+  font-family: 'open sans', open sans, sans-serif;
+  font-size: 16px;
+  margin: 20px 0 20px; 
+  line-height: 1.6;
+}
+form p,
+label[for="comfort"],
+label[for="explain"] {
+  padding-bottom: 6px;
+  border-bottom: 2.5px solid #3887be;
+}
+
+/* HEADER */
+/*header {
+  position: relative;
+  padding: 180px 0px 30px;
+  color: #fff;
+  background: linear-gradient(to bottom, rgba(43,38,96,0) 0%, rgba(0,0,0,0.9) 70%, rgba(0,0,0,1) 100%), url(https://images.unsplash.com/photo-1436985487860-712a3b558087) no-repeat;
+  background-size: cover;
+  background-position: bottom;
+}*/
+
+/* SECTION */
+section {
+  background: #ffffff;
+  padding: 0;
+}
+
+/* FORM STYLES */
+.input-wrap {
+  margin-bottom: 10px;
+}
+select {
+  display: block;
+  margin-bottom: 50px;
+}
+input[type="checkbox"], input[type="radio"] {
+  margin-right: 5px;
+}
+label[for="comfort"],
+label[for="explain"]{
+  display: block;
+  margin-bottom: 20px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 18px;
+  line-height: 1.6;
+}
+input[type="text"],
+textarea {
+  width: 80%;
+  padding: 6px;
+  font-size: 16px;
+  border: 1px solid #00BF8F;
+  background: #DAEAE6;
+  margin-bottom: 50px;
+}
+input[type="text"]{
+  width: 50%;
+}
+.input-wrap.select-box {
+  border: 1px solid #00BF8F;
+  background: #DAEAE6;
+  width: 50%;
+  height: 34px;
+  padding: 0px 10px;
+  margin-bottom: 50px;
+}
+input[type="date"],
+input[type="time"]{
+  border: none;
+  border: 1px solid #00BF8F;
+  background: #DAEAE6;
+  font-family: 'open sans', sans-serif;
+  letter-spacing: 0.5px;
+  height: 34px;
+  padding: 0 10px;
+  margin-bottom: 50px;
+  width: 50%;
+}
+.input-wrap.select-box:hover {
+  background: #00BF8F;
+}
+
+.input-wrap.select-box:hover select {
+   color: #fff;   
+}
+
+textarea {
+  min-height: 100px;
+}
+select {
+  border: none;
+  background: transparent;
+  font-family: 'open sans', sans-serif;
+  letter-spacing: 0.5px;
+  height: 34px;
+  width: 100%;
+}
+select:hover {
+  cursor: pointer;
+}
+input[type="submit"] {
+  display: block;
+  margin: 20px auto 50px;
+  height: 34px;
+  width: 125px;
+  font-family: 'open sans', sans-serif;
+  letter-spacing: 0.5px;
+  background: #3887be;
+  border: 0px solid;
+  color: #fff;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+}
+input[type="submit"]:hover {
+  background: #599ECF;
+  cursor: pointer;
+}
+
+/* SLIDER */
+/*input[type="range"] {
+  position: relative;
+  margin: 0 90px;
+}
+input[type="range"]:before,
+input[type="range"]:after {
+  position: absolute;
+  font-family: 'open sans', sans-serif;
+  text-transform: uppercase;
+  font-size: 12px; 
+  letter-spacing: 0.5px;
+  top: -2px;
+  color: #008463;
+}
+input[type="range"]:before{
+  content: "Very Healthy";
+  left: -100px;
+}
+input[type="range"]:after{
+  content: "Very Unhealthy";
+  right: -120px;
+}
+input[type="range"] {
+  -webkit-appearance: none !important;
+  display: inline-block;
+  height: 10px;
+  width: 250px;
+  margin: 26px 0px 50px 100px;
+  background: #DAEAE6;
+  border: 1px solid #00BF8F;
+  border-radius: 10px;
+  display: block;
+}
+input[type="range"]:focus {
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  background: #008463;
+  height: 15px;
+  width: 15px;
+  border: 4px solid #00BF8F;
+  border-radius: 20px;
+  box-shadow: 0 0 0 1px #00BF8F, 0 0 8px #008463 inset;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover, input[type="range"]::-webkit-slider-thumb:active {
+  height: 20px;
+  width: 20px;
+  border: 6px solid #008463;
+  background: #fff;
+  box-shadow: 0 0 0 0px #00BF8F, 0 0 8px #00BF8F inset;
+}*/
+
+
+ /*rad$color2io buttons*/
+/*  white: white;
+  #3887be: #3887be;*/
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: #666666;
+}
+
+.radio {
+  margin: 0.5rem;
+}
+.radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+/*.radio input[type="radio"] + .radio-label:before {
+  content: '';
+  background: white;
+  border-radius: 100%;
+  border: 1px solid #bfbfbf;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  position: relative;
+  top: -0em;
+  margin-right: 1em;
+  vertical-align: top;
+  cursor: pointer;
+  text-align: center;
+  transition: all 250ms ease;
+}
+.radio input[type="radio"]:checked + .radio-label:before {
+  background-color: #3887be;
+  box-shadow: inset 0 0 0 4px white;
+}
+.radio input[type="radio"]:focus + .radio-label:before {
+  outline: none;
+  border-color: #3887be;
+}
+.radio input[type="radio"]:disabled + .radio-label:before {
+  box-shadow: inset 0 0 0 4px white;
+  border-color: #bfbfbf;
+  background: #bfbfbf;
+}
+.radio input[type="radio"] + .radio-label:empty:before {
+  margin-right: 0;
+}
+
+.radio input[type="radio"] + .radio-label:before {
+  content: '';
+  background: white;
+  border-radius: 100%;
+  border: 1px solid #bfbfbf;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.0em;
+  position: relative;
+  top: -0em;
+  margin-right: 1em;
+  vertical-align: top;
+  cursor: pointer;
+  text-align: center;
+  transition: all 250ms ease;
+}
+.radio input[type="radio"]:checked + .radio-label:before {
+  background-color: #3887be;
+  box-shadow: inset 0 0 0 4px white;
+}
+.radio input[type="radio"]:focus + .radio-label:before {
+  outline: none;
+  border-color: #3887be;
+}
+.radio input[type="radio"]:disabled + .radio-label:before {
+  box-shadow: inset 0 0 0 4px white;
+  border-color: #bfbfbf;
+  background: #bfbfbf;
+}
+.radio input[type="radio"] + .radio-label:empty:before {
+  margin-right: 0;
+}*/
+
+.radio input[type="radio"] + .radio-label:before {
+  content: '';
+  background: white;
+  border-radius: 100%;
+  border: 1px solid #bfbfbf;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  position: relative;
+  top: -0em;
+  margin-right: 1em;
+  vertical-align: top;
+  cursor: pointer;
+  text-align: center;
+  transition: all 250ms ease;
+}
+.radio input[type="radio"]:checked + .radio-label:before {
+  background-color: #3887be;
+  box-shadow: inset 0 0 0 4px white;
+}
+.radio input[type="radio"]:focus + .radio-label:before {
+  outline: none;
+  border-color: #3887be;
+}
+.radio input[type="radio"]:disabled + .radio-label:before {
+  box-shadow: inset 0 0 0 4px white;
+  border-color: #bfbfbf;
+  background: #bfbfbf;
+}
+.radio input[type="radio"] + .radio-label:empty:before {
+  margin-right: 0;
+}
+
+
+
+ </style>
+</header>
+<body>
+<section>
+  <div class="wrapper">
+    <p><h2>Sample Survey</h2></p>
+    <!-- FORM -->
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSec30_ByON53yWO3FlQLkdNUqFmRpWVQqD3ooa9q79kn3JfjQ/formResponse">
+      
+      <!-- MUTLIPLE CHOICE -->
+      <p>During the past 7 days, on how many days did you eat food from a fast food restaurant, such as McDonald's or Taco John's?</p>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.569747639" id="e1" value="0 days" />
+          <label for="e1" class="radio-label">0 days</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.569747639" id="e2" value="1 day" />
+          <label for="e2" class="radio-label">1 day</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.569747639" id="e3" value="2 days" />
+          <label for="e3" class="radio-label">2 days</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.569747639" id="e4" value="3 days" />
+          <label for="e4" class="radio-label">3 days</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.569747639" id="e5" value="4 days" />
+          <label for="e5" class="radio-label">4 days</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.569747639" id="e6" value="5 days" />
+          <label for="e6" class="radio-label">5 days</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.569747639" id="e7" value="6 days" />
+          <label for="e7" class="radio-label">6 days</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.569747639" id="e8" value="7 days" />
+          <label for="e8" class="radio-label">7 days</label>
+      </div>
+
+      <p>Have you ever served on active duty in the U.S. Armed Forces?</p>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.626195871" id="e9" value="Yes" />
+          <label for="e9" class="radio-label">Yes</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.626195871" id="e10" value="No" />
+          <label for="e10" class="radio-label">No</label>
+      </div>
+
+      <p>What type of construction best describes your current home?</p>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.951125817" id="e11" value="Stick built home/traditional construction" />
+          <label for="e11" class="radio-label">Stick built home/traditional construction</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.951125817" id="e12" value="Modular home" />
+          <label for="e12" class="radio-label">Modular home</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.951125817" id="e13" value="Mobile home or trailer" />
+          <label for="e13" class="radio-label">Mobile home or trailer</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.951125817" id="e14" value="Apartment" />
+          <label for="e14" class="radio-label">Apartment</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.951125817" id="e15" value="Duplex" />
+          <label for="e15" class="radio-label">Duplex</label>
+      </div>
+      <div class="input-wrap radio">
+          <input type="radio" name="entry.951125817" id="e16" value="Other" />
+          <label for="e16" class="radio-label">Other</label>
+      </div>
+      
+      <!-- SUBMIT BUTTON -->
+      <input class="button" type="submit" value="Submit">
+    </form>
+  </div>
+  </div>
+</section>
+</body>
+</html>            

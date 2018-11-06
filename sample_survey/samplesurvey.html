@@ -1,0 +1,64 @@
+ <head>
+    <meta charset=utf-8 />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Northern Ponca Sample Survey</title>
+
+    <link rel='stylesheet' href='style.css' />
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.js'></script>
+    <link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+    <base target="_parent">
+
+  </head>
+  <body>
+
+  <head>
+
+    <table id="view" border="0">
+        <tr>
+            <th id='questionTitle'><h1>Why do you like living in Nebraska/South Dakota?</h1></th>
+            <th id='questionTitle'><h1>How long is the average ear of corn?</h1></th>
+        </tr>
+        <tr>
+            <td id="viewgraph">
+              <canvas id="myChart1"></canvas>
+            </td>
+            <td id="viewgraph">
+              <canvas id="myChart2"></canvas>
+            </td>
+        </tr>
+        <tr>
+            <th><h1 id='questionTitle'> How big are the fish in Elkhorn River?</h1></th>
+            <th><h1 id='questionTitle'> Do you like Plainview's Klown Doll Museum and the Cowboy Trail?</h1></th>
+        </tr>
+        <tr>
+            <td id="viewgraph">
+              <canvas id="myChart3"></canvas>
+            </td>
+            <td id="viewgraph">
+              <canvas id="myChart4"></canvas>
+            </td>
+        </tr>
+        <tr>
+            <th><h1 id='questionTitle'>  The Nebraska Cornhuskers have a good team dynamic and a lot of raw talent in their Freshman QB, Adrian Martinez. The Oklahoma Sooners have a dysfunctional defense who have allowed an average of 421.2 yards per game in their first six games. Which team is better?</h1></th>
+        </tr>
+        <tr>
+            <td id="viewgraph">
+              <canvas id="myChart5"></canvas>
+            </td>
+        </tr>
+    </table>
+
+</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.36.0/mapbox-gl.js'></script>
+    <script src="https://use.fontawesome.com/07d36eac3e.js"></script>
+    <script src="http://cdn.jsdelivr.net/leaflet.esri/1.0.0/esri-leaflet.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+
+  </body>
+</html>
