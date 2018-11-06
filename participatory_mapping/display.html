@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Leaflet and Google Forms Participatory Mapping</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta property="og:title" content="Leaflet and Google Form Participatory Mapping" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="A web app that uses Google Forms and Leaflet to collect data for participatory mapping using a web browser." />
+<!--Bootstrap for form-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <!--leaflet-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+  <!--Fonts-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900' rel='stylesheet' type='text/css'>
+
+  <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+  <style>
+    *{font-family: 'open sans', sans-serif;}
+    .map {height:100%}
+    #map { position: absolute;
+       top: 56px; /* Header Height */
+       bottom: 0px; /* Footer Height */
+       width: 100%;}
+    .leaflet-popup-content {font-size: medium;}
+    .form-group{width:250px;margin-bottom:0;}
+    .form-control{resize:none;}
+    .text-muted{font-size:smaller;}
+    hr {margin: 10px 0;}
+    .info {} .info h4 {margin: 0 0 5px; color: #777; }
+
+    #pin_menu{
+      max-width: 240px;
+      position: absolute;
+      top: 66px;
+      right:20px;
+      background-color:white;
+       padding: 6px 8px; font: 14px/16px "open sans", Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.9); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; 
+    }
+    .btn{
+      color: 486382 !important;
+      cursor: pointer;
+      padding: 10px;
+      margin-bottom: 5px !important;
+      margin-top: 5px !important;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    form{
+      visibility: hidden;
+      position: absolute;
+      top: 300px;
+    }
+    h3{
+      /*/*BWC blue:
+      color: #486382 !important;*/
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container text-center">
+    <h3><a>Participatory Mapping Results</a></h3>
+  </div>
+  <div class="map">
+    <div id="map"></div>
+  </div>
+
+  <script>
+    var map = L.map('map'); //Initialize the map
+
+    // var gsheet = '1v8xW8RbyB4qSlHq2IkTOGIEy0Lo4dVtST4FIyqty9FA';
+
+    //Add a basemap
+    var OpenStreetMap_Mapnik = L.tileLayer('https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
+    	minZoom: 14,
+      maxZoom: 19,
+    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | &copy; <a href="https://carto.com/attribution">CARTO</a> | Created by <a href ="http://bigwaterconsulting.net/" target ="_blank">Big Water Consulting</a>'
+    }).addTo(map);
+    map.setView([47.667031, -122.384448], 16);
+
+    var marker; //create variables used throughout the map
+
+    // Markers is an array of the markers. It is used in the delete function.
+    markers = []
+
+    // Custom map markers 
+    var hotdog = L.icon({
+      name: 'hot dog',
+      iconUrl: 'icons/hotdog.png',
+      iconSize:     [30, 30], // size of the icon
+      iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+      popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var shoe = L.icon({
+      name: 'shoe',
+      iconUrl: 'icons/shoe.png',
+      iconSize:     [30, 30], // size of the icon
+      iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+      popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var bug = L.icon({
+      name: 'bug',
+      iconUrl: 'icons/bug.png',
+      iconSize:     [30, 30], // size of the icon
+      iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+      popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+
+    // Decides which of the above Marker types should be drawn when the map is clicked
+    // the type_number is the current_marker_type
+    function iconpicker(type_number){
+      if(type_number == "one"){
+        return hotdog
+      }else if (type_number == "two"){
+        return shoe
+      }else if (type_number == "three"){
+        return bug
+      }
+    }
+
+
+
+    
+
+    // https://spreadsheets.google.com/feeds/list/1FhE20dl2WpaIF0BASJEzGLDcX7n4gplNzQPiE0HycxM/1/public/values?alt=json
+
+
+
+	var jsonPoints = 'https://spreadsheets.google.com/feeds/list/1FhE20dl2WpaIF0BASJEzGLDcX7n4gplNzQPiE0HycxM/1/public/values?alt=json'
+
+	var results  = (function() {
+	        var json = null;
+	        $.ajax({
+	            'async': false,
+	            'global': false,
+	            'url': jsonPoints,
+	            'dataType': "json",
+	            'success': function (data) {
+	                json = data;
+	            }
+	        });
+	        return json;
+	})();
+
+	// console.log(results.feed.entry)	
+
+	// for (i in results.feed.entry) {
+	// // "gsx$ipaddress" "gsx$markera" "gsx$markerb" "gsx$markerc"
+
+
+	one = []
+	two = []
+	three = []
+	var result = ""
+	var str = ""
+
+
+	// Is there a way to reduce the big o?
+	//var marker = L.marker([51.5, -0.09]).addTo(mymap);
+	for (a in results.feed.entry) {
+		str = results.feed.entry[a]["gsx$markera"]["$t"]
+		result = str.split(';').map(e => e.split(','));
+		for (b in result){
+			if ((result[b] != "") && (result[b] != " ")){ 
+				one = [...one, result[b]]
+			}
+			b++
+		}
+		str = results.feed.entry[a]["gsx$markerb"]["$t"]
+		result = str.split(';').map(e => e.split(','));
+		for (b in result){
+			if ((result[b] != "") && (result[b] != " ")){ 
+				two = [...two, result[b]]
+			}
+			b++
+		}
+		str = results.feed.entry[a]["gsx$markerc"]["$t"]
+		result = str.split(';').map(e => e.split(','));
+		for (b in result){
+			if ((result[b] != "") && (result[b] != " ")){ 
+				three = [...three, result[b]]
+			}
+			b++
+		}		
+		a++
+	}
+
+	// console.log(one)
+	// console.log(two)
+	// console.log(three)
+
+
+	// Markers is an array of the markers. It is used in the delete function.
+    markers = []
+    marker_number = 0
+
+
+    for (i in one){
+    	type = "one"
+      var popup_text = '<p>This is a ' + iconpicker(type).options.name +'!</p> '
+    	markers[marker_number] = L.marker(one[i], {
+	        icon: iconpicker(type),
+	        type_of_marker: type,
+	    }).addTo(map).bindPopup(popup_text, {maxWidth:400});
+      	i++
+    }
+
+    for (i in two){
+    	type = "two"
+      var popup_text = '<p>This is a ' + iconpicker(type).options.name +'!</p> '
+    	markers[marker_number] = L.marker(two[i], {
+	        icon: iconpicker(type),
+	        type_of_marker: type,
+      	}).addTo(map).bindPopup(popup_text, {maxWidth:400});
+        i++
+
+    }
+
+    for (i in three){
+    	type = "three"
+      var popup_text = '<p>This is a ' + iconpicker(type).options.name +'!</p> '
+    	markers[marker_number] = L.marker(three[i], {
+	        icon: iconpicker(type),
+	        type_of_marker: type,
+      	}).addTo(map).bindPopup(popup_text, {maxWidth:400});
+      	i++
+    }
+
+	// }
+
+    </script>
+</body>

@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Leaflet and Google Forms Participatory Mapping</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta property="og:title" content="Leaflet and Google Form Participatory Mapping" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="A web app that uses Google Forms and Leaflet to collect data for participatory mapping using a web browser." />
+  <style>
+    body {
+        margin: 0;
+    }
+    html, body { height: 100% }
+   #loading{
+    top:150px;
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto;
+    width:441px;
+   }
+
+  </style>
+</head>
+<body>
+<script>
+
+// document.getElementsByTagName('iframe')[0].src=document.getElementsByTagName('iframe')[0].src
+  i = 0
+
+  function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  function myfunction(){
+    i += 1
+    if (i == 2){
+      document.getElementById('map_iframe').style.height = "0px"
+      document.getElementsByTagName('iframe')[0].src="great_website.html"
+      sleep(500).then(() => {
+      document.location.href = "great_website.html";
+    })
+    }
+  }
+</script>
+
+<iframe src="map_survey.html" id="map_iframe" style="border: 0; width: 100%; height: 99%; overflow:hidden; z-index:999; position:relative;" onload="myfunction()"></iframe>
+
+<div id = "loading">
+<img src="loading.gif">
+</div>
+
+
+</body>

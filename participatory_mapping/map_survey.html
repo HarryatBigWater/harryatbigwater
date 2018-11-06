@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Leaflet and Google Forms Participatory Mapping</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta property="og:title" content="Leaflet and Google Form Participatory Mapping" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="A web app that uses Google Forms and Leaflet to collect data for participatory mapping using a web browser." />
+  <!--Bootstrap for form-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <!--leaflet-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+  <!--Fonts-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900' rel='stylesheet' type='text/css'>
+
+  <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+  <style>
+    *{font-family: 'open sans', sans-serif;}
+    .map {height:100%}
+    #map { position: absolute;
+       top: 56px; /* Header Height */
+       bottom: 0px; /* Footer Height */
+       width: 100%;}
+    .leaflet-popup-content {font-size: medium;}
+    .form-group{width:250px;margin-bottom:0;}
+    .form-control{resize:none;}
+    .text-muted{font-size:smaller;}
+    hr {margin: 10px 0;}
+    .info {} .info h4 {margin: 0 0 5px; color: #777; }
+
+    #pin_menu{
+      max-width: 240px;
+      position: absolute;
+      top: 66px;
+      right:20px;
+      background-color:white;
+       padding: 6px 8px; font: 14px/16px "open sans", Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.9); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; 
+    }
+    .btn{
+      /*color: #486382 !important;*/
+      cursor: pointer;
+      padding: 10px;
+      margin-bottom: 5px !important;
+      margin-top: 5px !important;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    form{
+      visibility: hidden;
+      position: absolute;
+      top: 300px;
+    }
+    h3{
+      /*/*BWC blue:
+      color: #486382 !important;*/
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container text-center">
+    <h3><a>Particpatory Mapping Project</a></h3>
+  </div>
+  <div class="map">
+    <div id="map"></div>
+  </div>
+  <div id = "pin_menu">
+    <a id = "destroy" onclick ="destroy_all()" class="btn btn-danger center-block">Clear markers</a>
+    <hr>
+    <a id ="one" onclick="setto_one()" class="btn btn-primary center-block">Marker 1</a><hr>
+    <a id ="two" onclick="setto_two()" class="btn btn-primary center-block" >Marker 2</a><hr>
+    <a id = "three" onclick="setto_three()" class="btn btn-primary center-block">Marker 3</a>
+    <hr>
+    <a id = "submit" onclick ="submit_map()" class="btn btn-success center-block">Submit map</a>
+  </div>
+  <script>
+    var map = L.map('map'); //Initialize the map
+
+    var formId = '1jKikvo13Z3snKzU1FRNAq5x0sZ3erPqzPdcAHtC9mgI';
+    var formIp = '1187308881';
+    var formAMarkers = '1594844786';
+    var formBMarkers = '552211557';
+    var formCMarkers = '538960565';
+
+    // var gsheet = '1v8xW8RbyB4qSlHq2IkTOGIEy0Lo4dVtST4FIyqty9FA';
+
+    //Add a basemap
+    var OpenStreetMap_Mapnik = L.tileLayer('https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
+    	minZoom: 14,
+      maxZoom: 19,
+    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | &copy; <a href="https://carto.com/attribution">CARTO</a> | Created by <a href ="http://bigwaterconsulting.net/" target ="_blank">Big Water Consulting</a>'
+    }).addTo(map);
+    map.setView([47.667031, -122.384448], 16);
+
+    var marker, circle, lat, lng; //create variables used throughout the map
+
+    // Markers is an array of the markers. It is used in the delete function.
+    markers = []
+    // i gives the marker number. Sorry for putting this global.
+    i = -1
+    // At some point maybe think about collecting IP addresses?
+    ip = Math.random()
+    // Set the default marker to the first marker
+    current_marker_type = "one"
+
+    // Functions to set the type of map marker being placed
+    function setto_one(){
+      current_marker_type = "one"
+    }
+    function setto_two(){
+      current_marker_type = "two"
+    }
+    function setto_three(){
+      current_marker_type = "three"
+    }
+
+    // Custom map markers 
+    var hotdog = L.icon({
+      name: 'hot dog',
+      iconUrl: 'icons/hotdog.png',
+      iconSize:     [30, 30], // size of the icon
+      iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+      popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var shoe = L.icon({
+      name: 'shoe',
+      iconUrl: 'icons/shoe.png',
+      iconSize:     [30, 30], // size of the icon
+      iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+      popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var bug = L.icon({
+      name: 'bug',
+      iconUrl: 'icons/bug.png',
+      iconSize:     [30, 30], // size of the icon
+      iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+      popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+
+    // Decides which of the above Marker types should be drawn when the map is clicked
+    // the type_number is the current_marker_type
+    function iconpicker(type_number){
+      if(type_number == "one"){
+        return hotdog
+      }else if (type_number == "two"){
+        return shoe
+      }else if (type_number == "three"){
+        return bug
+      }
+    }
+
+    // When user clicks delete this marker
+    function destroy_self(this_marker_id){
+      map.removeLayer(markers[this_marker_id])
+    }
+
+    // When user clicks "clear markers" button
+    function destroy_all(){
+      for(_i = 0; _i < markers.length; _i++){
+        map.removeLayer(markers[_i])
+      }
+    }
+
+
+    // collectdata happens when the map is clicked on a point.
+    // it takes that locaion as input and puts a marker there
+    function collectData(e) {
+      i += 1
+      this_marker_id = i
+      //console.log(e);
+      lat = e.latlng.lat;
+      lng = e.latlng.lng;
+      type = current_marker_type
+
+      // console.log(this_marker_id)
+      // console.log(lat)
+      // console.log(lng)
+      // console.log(ip)
+      // console.log(type)
+
+      // delete this hot dog or whatever
+      var popup_text = '<span class="btn btn-danger center-block" onclick = destroy_self('+this_marker_id+')>Delete this ' + iconpicker(type).options.name +'!</span> ';
+
+      // Add marker to markers Array
+      markers[i] = L.marker(e.latlng, {
+        draggable: true,
+        icon: iconpicker(type),
+        type_of_marker: type,
+        this_marker_id: this_marker_id
+      }).addTo(map)
+      .bindPopup(popup_text, {maxWidth:400});
+    }
+
+    // When you click, fire above collectdata function
+    map.on('click', function(e) {
+      collectData(e);
+    });
+
+
+    // When the submit map button is pushed, parse this to post to the google forms:
+    // Object.keys(map._layers).length
+    function submit_map(){
+      // Create empty strings to add data to later (I know lists are faster, but this is such little data)
+      one = ""
+      two = ""
+      three = ""
+
+      // For each object (except for the first, which is the map)
+      for(_i = 1; _i < Object.keys(map._layers).length; _i++){
+        current_marker = Object.keys(map._layers)[_i]
+        // console.log("lat:\n")
+        // console.log(map._layers[current_marker]._latlng.lat)
+        // console.log("lng:\n")
+        // console.log(map._layers[current_marker]._latlng.lng)
+        // console.log("type:\n")
+        // console.log(map._layers[current_marker].options.type_of_marker)
+        if (map._layers[current_marker].options.type_of_marker == "one"){
+          one += map._layers[current_marker]._latlng.lat 
+          one += ", "
+          one += map._layers[current_marker]._latlng.lng
+          one += "; "
+        } else if (map._layers[current_marker].options.type_of_marker == "two"){
+          two += map._layers[current_marker]._latlng.lat 
+          two += ", "
+          two += map._layers[current_marker]._latlng.lng
+          two += "; "
+        } else if (map._layers[current_marker].options.type_of_marker == "three"){
+          three += map._layers[current_marker]._latlng.lat 
+          three += ", "
+          three += map._layers[current_marker]._latlng.lng
+          three += "; "
+        } else{
+          console.log("Seeing this is impossible. I hope")
+        }
+      } 
+      // console.log("one", one)
+      // console.log("two", two)
+      // console.log("three", three)
+
+      // Write everything to the appropriate fields in the hidden form:
+      document.getElementById("aone").value = one;
+      document.getElementById("btwo").value = two;
+      document.getElementById("cthree").value = three;
+      // currently not collection IP addresses. Maybe in the future... Or just an option for an open form
+      document.getElementById("ipaddr").value = "not being collected...";
+      document.getElementById("googleformform").submit();
+
+    }
+
+
+  </script>
+<!-- The below form is hidden and located behind the map. It gets filled in when the map's submit button is pushed -->
+<form action="https://docs.google.com/forms/d/e/1FAIpQLSc1sSM9zjMrXuFioSbgr0WNYqUcWeeeQ7B7cS-SWi11DjtUcQ/formResponse" id = "googleformform">
+<label for="a">Number ip address/short answer</label>
+<textarea name="entry.1187308881" id="ipaddr"/></textarea>
+
+<label for="a">Number a/1</label>
+<textarea name="entry.1594844786" id="aone"/></textarea>
+
+<label for="a">Number b/2</label>
+<textarea name="entry.552211557" id="btwo"/></textarea>
+
+<label for="a">Number c/3</label>
+<textarea name="entry.538960565" id="cthree"/></textarea>
+ <input class="button" type="submit" value="Submit">
+</form>
+
+
+</body>
+
+</html>
