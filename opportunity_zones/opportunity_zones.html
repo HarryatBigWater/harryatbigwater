@@ -109,7 +109,7 @@
         info.update = function (props) {
             this._div.innerHTML = (props ? '<h4 style="text-align: center;">Intersection of Opportunity Zones and <br>American Indian/Alaska Native Areas/Hawaiian Home Lands</h4>'
                 +'<div class="spanny" style="font-family:open sans; text-align:center; color:grey">' + props.NAMELSAD + '</div>'
-                : '<h4 style="text-align: center;">Intersection of Opportunity Zones and <br>American Indian/Alaska Native Areas/Hawaiian Home Lands</h4>'+'<div class="spanny" style="font-family:open sans; text-align:center;color:grey">Hover over an Opportuntiy Zone to see what county<br> or American Indian/Alaska Native/Native Hawaiian (AIANNH)<br> area the Opportunity Zone is located within.</div>');
+                : '<h4 style="text-align: center;">Intersection of Opportunity Zones and <br>American Indian/Alaska Native Areas/Hawaiian Home Lands</h4>'+'<div class="spanny" style="font-family:open sans; text-align:center;color:grey">Hover over an Opportuntiy Zone to see what county<br> or American Indian/Alaska Native/Native Hawaiian (AIAN)<br> area the Opportunity Zone is located within.</div>');
         };
 
         info.addTo(map);        
@@ -120,9 +120,10 @@
          }
          
          function style(feature) {
+            currentZoom = map.getZoom();
             return {
                 fillColor: '#d73027',
-                weight: 1.5,
+                weight: setStyleByZoom(currentZoom),
                 opacity: 0.7,
                 color: '',
                 dashArray: '',
@@ -132,9 +133,9 @@
         
         function highlightFeature(e) {
                 var layer = e.target;
-
+                currentZoom = map.getZoom();
                 layer.setStyle({
-                        weight: 2,
+                        weight: setStyleByZoom(currentZoom)+.5,
                         color: 'black',
                         dashArray: '',
                         fillOpacity: 0.7
@@ -176,9 +177,10 @@
 
 
         function style2(feature) {
+            currentZoom = map.getZoom();
             return {
                 fillColor: '',
-                weight: .5,
+                weight: setStyleByZoom(currentZoom),
                 opacity: 0.7,
                 color: '#D77A27',
                 dashArray: '',
@@ -187,9 +189,9 @@
         }
                 function highlightFeature2(e) {
                 var layer = e.target;
-
+                currentZoom = map.getZoom();
                 layer.setStyle({
-                        weight: 3,
+                        weight: setStyleByZoom(currentZoom)+.5,
                         color: 'black',
                         dashArray: '',
                         fillOpacity: 0
@@ -251,7 +253,7 @@
                     "Opportunity Zone"+ '<br>' + ''
 
             div.innerHTML +=  '<p style="line-height: 1.2"><i style="outline: 1px solid #D77A27; opacity:.5"></i> ' +
-                    "AIANNH Areas"+ '<br></p>'
+                    "AIAN Areas"+ '<br></p>'
             return div;
         };
         
@@ -260,7 +262,7 @@
 
         var baseLayers = {
             "All Opportunity Zones": geojson3,
-            "Opportunity Zones in AIANNH Areas": geojson
+            "Opportunity Zones in AIAN Areas": geojson
         };
 
         var overlays = {
@@ -269,7 +271,31 @@
 
         L.control.layers(baseLayers, overlays,{collapsed:false, position: 'bottomleft'}).addTo(map);
 
+        map.on('zoomend', function () {
+            currentZoom = map.getZoom();
+            geojson2.setStyle({weight: setStyleByZoom(currentZoom)})
+        });
 
+        function setStyleByZoom(currentZoom){
+            if (currentZoom > 15) {
+                return 4;
+            }
+            if (currentZoom > 9) {
+                return 3;
+            }
+            if (currentZoom > 8) {
+                return 2;
+            }
+            if (currentZoom > 6) {
+                return 1.5;
+            }
+            if (currentZoom > 5) {
+                return 1;
+            }
+            else {
+                return .5;
+            }
+        }
 
 
     </script>
