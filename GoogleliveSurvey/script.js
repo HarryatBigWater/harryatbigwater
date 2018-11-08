@@ -287,9 +287,9 @@ count = 0
 $("#theIframe").load(function(){
   count += 1
   if (count == 2){
-    document.getElementById('theIframe').style.height = "0px"
-    document.getElementsByTagName('iframe')[0].src=""
-    sleep(1200).then(() => {
+    document.getElementsByTagName('iframe')[0].src="loading.html"
+    // document.getElementById('theIframe').style.height = "0px"
+    sleep(1500).then(() => {
       location.reload();
     })
     
