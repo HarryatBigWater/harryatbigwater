@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>US Tribal Lands Map</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src= 'AIANdata.js'></script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body, #map {
+            height: 100%;
+            font-family: open sans !important;
+        }
+
+
+        .info {
+             padding: 2px 8px;
+             font: 14px/16px Arial, Helvetica, sans-serif;
+             background: white;
+             background: rgba(255, 255, 255,0.8);
+             box-shadow: 0 0 15px rgba(0,0,0,0.2);
+             border-radius: 5px;
+             
+    }
+
+    .legend {
+            line-height: 18px;
+            color: #555;
+        }
+
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+    .dropDown {
+            padding: 4px 4px;
+             font: 12px/14px Arial, Helvetica, sans-serif;
+             background: white;
+             background: rgba(255, 255, 255,0.8);
+             box-shadow: 0 0 15px rgba(0,0,0,0.2);
+             border-radius: 5px;
+
+    }
+    
+    .leaflet-bottom .dropDown {
+        margin-bottom: 37px;
+    }
+    </style>
+</head>
+
+<body>
+
+   <div id="map">    </div> 
+        <script>
+        var map = L.map('map', {
+        zoom: 4,
+        minZoom: 1,
+        maxZoom: 10,
+        attributionControl: true,
+    });
+
+    
+    var osm = L.tileLayer('http://d.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', {
+    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>. | <a href="https://www.census.gov/geo/maps-data/data/cbf/cbf_aiannh.html">Data</a> | Prepared by <a href="http://www.bigwaterconsulting.net">Big Water Consulting</a>',
+            minZoom: 1,
+            maxZoom: 18
+        }).addTo(map);
+    
+
+    
+    
+    // var attControl = L.control.attribution();
+    // attControl.addTo(map);
+    // attControl.removeAttribution(oceanAtt);
+    // attControl.removeAttribution(topoAtt);
+    //attControl.addAttribution(topoAtt);
+    // attControl.addAttribution(bwAtt);
+    
+    //Clears old tilelayer when zooming out to workaround the leaflet tilelayer-switching error
+    // map.on('zoomend', function() {
+    //     attControl.removeAttribution(oceanAtt);
+    //     attControl.removeAttribution(topoAtt);
+    //        if (map.getZoom() < 5) {
+    //         ocean._clearBgBuffer();
+    //         attControl.addAttribution(topoAtt);
+
+    //        } else {
+    //         attControl.addAttribution(oceanAtt);
+             
+    //        };
+         
+           
+    // });
+    
+
+    
+        if ($(window).width() > 1460 & $(window).height() > 720){
+             map.setView([39.826064, -96], 5);
+        } else{
+             map.setView([39.826064, -96], 4);            
+        }
+    
+    
+        function Nround(num, places) 
+        { return +(Math.round(num + "e+" + places)  + "e-" + places);
+    }
+    
+    
+    var mod = "value2"; //starting value for variable that changes when the dropdown menu item is selected
+        
+    var geojson; //initialize geojson layer
+    
+    $(document).ready(function(){   //for firefox
+    
+
+    //Commafying functions to add commas to numbers
+    String.prototype.commafy = function () {
+        return this.replace(/(^|[^\w.])(\d{4,})/g, function($0, $1, $2) {
+        return $1 + $2.replace(/\d(?=(?:\d\d\d)+(?!\d))/g, "$&,");
+        });
+        }
+    Number.prototype.commafy = function () {
+        return String(this).commafy();
+    }
+    
+    var dropDown = L.control({position: 'bottomleft'});   //creates a drop-down menu control/div for selecting variables
+    dropDown.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'dropDown');
+        this._div.innerHTML = ( '<span style="display: block; margin: 0px auto;  line-height: 15px; text-align: center;"><font color = "gray"; size="2.5">Select a Variable to Explore</font></span>' +
+                '<select onchange="getval(this.value, event);" onclick="disProp(event);" onfocus="disProp(event);"><option value="value2" selected>Type of Recognized Land</option><option value="value3">Distance to Urbanized Area</option><option value="value4">% American Indian/Alaska Native</option><option value="value5">Median Household Income</option><option value="value6">Housing Units</option></select>');
+        return this._div;
+    };
+    
+    dropDown.addTo(map);
+     
+     // Legend
+     var legend = L.control({position: 'bottomright'});
+     
+    legend.onAdd = function (map) {
+            this._div=L.DomUtil.create('div', 'info legend');
+            this.update();
+            return this._div;
+        }
+
+        legend.update = function (exet) {
+            
+            switch(mod){
+                case 'value2':
+            landLeg();
+        break;
+        case 'value3':
+            cityLeg();
+        break;
+                case 'value4':
+            aianLeg();
+                break;
+                case 'value5':
+            econLeg();
+                break;
+        case 'value6':
+            unitLeg();
+        break;
+            }
+        }
+    //   Legend-making functions for the switch
+                econLeg = function (exet) {
+                    this._div = L.DomUtil.create('div', 'info legend'),
+                        grades = [0, 2500, 25000, 40000, 60000, 88000],
+                        labels = ["No data", 2500 + " &ndash; " + 25000, 25000 + " &ndash; " + 40000, 40000 + " &ndash; " + 60000, 60000 + " &ndash; " + 88000, 88000];
+            legend._div.innerHTML+= '<span style="display:block; text-align: center;"><b>Median Household<br/>           Income ($)</b></span>';
+                    for (var i = 0; i < grades.length; i++) {
+                        legend._div.innerHTML +=
+                        '<i style="background:' + econColor(grades[i] + 1) + '"></i> ' +
+                        labels[i] + (grades[i + 1] ? '<br>' : '+');    
+                    };
+                    return this._div;
+                }
+
+                aianLeg = function (exet) {
+                        this._div = L.DomUtil.create('div', 'info legend'),
+                            grades = [0, 15, 40, 65, 90],
+                            labels = [];
+            legend._div.innerHTML+= '<span><b>% Identifying as AIAN</b></span>' + '<br/>';
+                        for (var i = 0; i < grades.length; i++) {
+                            legend._div.innerHTML +=
+                            '<i style="background:' + aianColor(grades[i] + 1) + '"></i> ' +
+                            grades[i] + (grades[i + 1] ? ' &ndash; ' + grades[i + 1] + '%<br>' : '%+');
+                        };
+                    return this._div;
+                }
+
+        landLeg = function (exet) {
+            this._div = L.DomUtil.create('div', 'info legend'),
+            grades = ["Federally Recognized Reservation", "AK Native Village Statistical Area", "Off-Reservation Trust Land", "Hawaiian Home Land", "OK Tribal Statistical Area", "State Reservation or Area", "Tribal Designated Statistical Area"],
+            labels = ["Federally Recognized Reservation", "AK Native Village Statistical Area", "Off-Reservation Trust Land", "Hawaiian Home Land", "OK Tribal Statistical Area", "State Reservation or Area", "Tribal Designated Statistical Area"];
+            legend._div.innerHTML+= '<span style="display: block; text-align: center; height: 0"><b>Land/Area Category</b></span><br/>' ;
+            for (var i = 0; i < labels.length; i++) {
+            legend._div.innerHTML +=
+                '<i style="background:' + landColor(grades[i]) + '"></i> ' +
+                labels[i] + '<br>';
+            };
+            return this._div;
+        }
+
+        cityLeg = function (exet) {
+            this._div = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 50, 150, 300, 600],
+            labels = [];
+            legend._div.innerHTML = '<span style="display: block; text-align: center; height: 0 "><b>Distance to Urbanized Area</b></span><br/><em>(50,000 or more people)</em><br />';
+            
+            for (var i = 0; i < grades.length; i++) {
+            legend._div.innerHTML +=
+             '<i style="background:' + cityColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + ' miles<br>' : '+ miles<br>');
+            }
+            return this._div;
+        }
+
+        unitLeg = function (exet){
+            this._div = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 500, 2000, 5000, 15000],
+            labels = [];
+            legend._div.innerHTML = '<span style="display: block; text-align: center; height: 0"><b>Occupied Housing Units</b></span><br/>';
+            for (var i = 0; i < grades.length; i++) {
+            legend._div.innerHTML +=
+             '<i style="background:' + unitColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + ' units<br>' : '+ units');
+            }
+            return this._div;
+        }
+
+        legend.addTo(map);
+    
+     //Info Box     Switch changes data shown based on variable selected
+     var info = L.control();
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+
+        info.update = function (props) {   //Updates info box when hovering over based on which variable is selected
+            switch (mod){
+            case 'value2':
+                this._div.innerHTML = (props ?
+                '<b>' + props.NAME + '</b><br />' + 'Type:  ' + props.LType  + '<br />' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>');
+            break;
+            case 'value3':
+                var dist= Nround(props.DMi,0);
+                 this._div.innerHTML = (props ?
+                '<b>' + props.NAME + '</b><br />' +  dist + ' miles to nearest urbanized area' + '<br />' +
+                'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>');
+            break;
+            case 'value4':
+                this._div.innerHTML = (props ?
+                '<b>' + props.NAME + '</b><br />' + Nround(props.AIComP,1) + '% identify as American Indian/Alaska Native'  + '<br />' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>');
+            break;
+            case 'value5':
+                this._div.innerHTML = (props ?
+                '<b>' + props.NAME + '</b><br>$' + (props.MedHIn).commafy() + ' Median Household Income' + '<br>' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>');
+            break;
+            case 'value6':
+                this._div.innerHTML = (props ?
+                '<b>' + props.NAME + '</b><br />' + (props.OccUnt).commafy() + ' Occupied housing units'  + '<br>' + 'Unit total: ' + (props.UntTot).commafy() + '<em><font size =  2>  (Reservation and Trust)</font></em>' + '<br>' + Nround(props.Pvac,1) + '% Vacant units'
+                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>'); 
+            };
+        };
+        info.addTo(map);
+    
+     function highlightFeature(e) {
+                   
+        var layer = e.target;
+               layer.setStyle({
+                weight: 2,
+                color: '#60C',
+                dashArray: '',
+        fillColor: 'purple',
+                fillOpacity: .5
+            });
+
+        if (!L.Browser.ie && !L.Browser.opera) {
+                layer.bringToFront();
+            };
+        
+        info.update(layer.feature.properties);   
+    };
+
+     function resetHighlight(e) {
+            geojson.resetStyle(e.target);
+        //info.update();
+        };
+
+    function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+        mouseout: resetHighlight
+       });
+        };
+
+     //      <-<    COLORS    >->
+    function landColor(lType) {
+        var colReturn
+        switch(lType) {
+            case "Federally Recognized Reservation":
+            colReturn= "#00D100";
+            break;
+            case "AK Native Village Statistical Area":
+            colReturn= "#d95f02";
+            break;
+            case "Off-Reservation Trust Land":
+            colReturn= "#e7298a";
+            break;
+            case "Hawaiian Home Land":
+            colReturn= "#1b9e77";
+            break;
+            case "OK Tribal Statistical Area":
+            colReturn= "#e6ab02";
+            break;
+            case "State Reservation or Area":
+            colReturn= "#7570b3";
+            break;
+            case "Tribal Designated Statistical Area":
+            colReturn= "#a65628";
+            break;
+           
+        }
+        return colReturn;
+    }
+    
+    function cityColor(d) {
+
+         return d > 600   ? '#08519c' :
+              d > 300   ? '#3182bd' :
+              d > 150   ? '#6baed6' :
+              d > 50     ? '#bdd7e7' :
+              d >= 0    ? '#eff3ff' :
+                      '#737373';
+        
+    }
+    
+    function unitColor(d) {
+        return d > 15000  ? '#54278f' : 
+             d > 5000  ? '#756bb1' :
+             d > 2000  ? '#9e9ac8' :
+             d > 500   ? '#cbc9e2' :
+                        '#f2f0f7' ;
+    }
+    
+    function aianColor(d) {
+         return d > 90   ? '#006d2c' :
+              d > 65   ? '#31a354' :
+              d > 40   ? '#74c476' :
+              d > 15   ? '#bae4b3' :
+                      '#edf8e9';
+    }
+    
+    function econColor(d) {
+         return d > 88000   ? '#a63603' :
+              d > 60000   ? '#e6550d' :
+              d > 40000   ? '#fd8d3c' :
+              d > 25000   ? '#fdbe85' :
+              d > 2500     ? '#fde0c5' :
+                            'white';
+    }
+    
+    function trustBorderC(lType) {
+        if (lType === 'Off-Reservation Trust Land') {
+        var d= '#e7298a';
+
+        } else {
+
+        var d='black';
+        };
+        return d;
+    }
+    
+    function trustBorderW(lType) {
+        if (lType === 'Off-Reservation Trust Land') {
+        var d = 1;
+    
+        } else {
+        var d=.5;
+
+        };
+        return d;
+    }
+    
+
+        geojson = L.geoJson(expAIAN, {
+           style: style,
+           onEachFeature: onEachFeature
+           }).addTo(map);
+
+     //     STYLE
+    //We declare a general style function that changes with 'mod' since otherwise the highlight would reset the default after mouseover
+    function style (feature){
+        
+        return mod === 'value3' ? styleCity(feature):
+             mod === 'value2' ? styleLand(feature):
+             mod === 'value4' ? styleAIAN(feature):
+             mod === 'value5' ? styleEcon(feature):
+             mod === 'value6' ? styleUnit(feature):
+                    'none'    ;
+        
+    };
+    
+    function styleLand(feature){
+        return{
+        fillColor: landColor(feature.properties.LType),
+        fillOpacity: 0.8,
+        weight: trustBorderW(feature.properties.LType),
+        opacity: 0.8,
+        color: trustBorderC(feature.properties.LType),
+        };
+    }
+    function styleCity(feature){
+        return{
+            fillColor: cityColor(feature.properties.DMi),
+            fillOpacity: 0.8,
+            weight: .5,
+            opacity: 0.8,
+            color: 'black',
+            };
+    };
+    
+    function styleEcon(feature){
+        return{
+            fillColor: econColor(parseInt(feature.properties.MedHIn)),
+            fillOpacity: 0.8,
+            weight: .5,
+            opacity: 0.8,
+            color: 'black',
+            };
+    };
+    
+    function styleAIAN(feature){
+        return{
+            fillColor: aianColor(feature.properties.AIComP),
+            fillOpacity: 0.8,
+            weight: .5,
+            opacity: 0.8,
+            color: 'black',
+            };
+    };
+    
+    function styleUnit(feature){
+        return{
+        fillColor: unitColor(feature.properties.OccUnt),
+        fillOpacity: 0.8,
+        weight: .5,
+        opacity: 0.8,
+        color: 'black',
+        };
+
+    };
+       //Getval function from onchange
+       getval = function(sel, e){
+        disProp(e);
+            mod = sel;
+            geojson.eachLayer(function(layer){
+            var id=layer._leaflet_id;
+            var styNew=style(layer.feature);
+            map._layers[id].setStyle({
+                fillColor:styNew["fillColor"],
+                fillOpacity:styNew["fillOpacity"],
+                weight:styNew["weight"],
+                opacity:styNew["opacity"],
+                color:styNew["color"]
+                });
+            })
+                      
+
+        map.removeControl(legend);
+        //map.removeControl(dropDown);
+        legend.addTo(map);
+        //dropDown.addTo(map);
+    };
+    
+    
+    
+    
+    
+    }); //contains everything in jquery except disProp(e) and mod/other map elements
+     
+    function disProp(e)
+    {
+       if (!e) {e = window.event;
+       e.cancelBubble = true;}
+       if (e.stopPropagation) {e.stopPropagation();}
+    };
+   
+    </script>
+
+</body>
+</html>
