@@ -9,7 +9,14 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <script type="text/javascript" src = "rent.js"></script>
     <style>
-        #map { width: 960px; height: 500px; }
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            font-family: open sans !important;
+        }
         .info {
             padding: 6px 8px;
             font: 14px/16px 'Open Sans', sans-serif;
@@ -87,8 +94,12 @@
 
 <div id="map">
     <script>
-
-        var map = L.map('map').setView([39.826064, -98.592588], 4);
+               // Set initial zoom to fit within window width
+        if ($(window).width() > 1460 & $(window).height() > 720){
+             var map = L.map('map').setView([39.826064, -96], 5);
+        } else{
+             var map = L.map('map').setView([39.826064, -96], 4);            
+        }
         var Acetate_all = L.tileLayer('http://b.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', {
     attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a> | Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a> | Median rent estimates (2008, 2018) by <a href= "https://www.huduser.gov/portal/datasets/50per.html">HUD</a> | Inflation calculator by <a href="https://www.bls.gov/data/inflation_calculator.htm">BLS</a> | Prepared by <a href="http://www.bigwaterconsulting.net">Big Water Consulting</a>',
     subdomains: '0123',
