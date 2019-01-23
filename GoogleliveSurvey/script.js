@@ -137,24 +137,34 @@ var myChart = new Chart(ctx, {
         datasets: [{
             data: [question3['0 days'], question3['1 day'],question3['2 days'],question3['3 days'],question3['4 days'],question3['5 days'],question3['6 days'], question3['7 days']],
             backgroundColor: [
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(0, 0, 0, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(216, 191, 216, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(43, 136, 158, 0.2)',
-              'rgba(59, 83, 173, 0.2)',
-              'rgba(0, 0, 0, 0.2)',
+            'rgba(68, 169, 233, 0.2)',
+            'rgba(0, 75, 130, 0.2)',
+            'rgba(17, 108, 181, 0.2)',
+            'rgba(162, 82, 33, 0.2)',
+            'rgba(193, 140, 36, 0.2)',
+            'rgba(230, 183, 31, 0.2)',
+            'rgba(152, 35, 26, 0.2)',
+            'rgba(199, 52, 42, 0.2)',    
             ],
             borderColor: [
-              'rgba(255, 159, 64, 1.0)',
-              'rgba(0, 0, 0, 1.0)',
-              'rgba(54, 162, 235, 1.0)',
-              'rgba(216, 191, 216, 1.0)',
-              'rgba(75, 192, 192, 1.0)',
-              'rgba(43, 136, 158, 1.0)',
-              'rgba(59, 83, 173, 1.0)',
-              'rgba(0, 0, 0, 1.0)',
+            'rgba(68, 169, 233, 1.0)',
+            'rgba(0, 75, 130, 1.0)',
+            'rgba(17, 108, 181, 1.0)',
+            'rgba(162, 82, 33, 1.0)',
+            'rgba(193, 140, 36, 1.0)',
+            'rgba(230, 183, 31, 1.0)',
+            'rgba(152, 35, 26, 1.0)',
+            'rgba(199, 52, 42, 1.0)',  
+            ],
+            hoverBackgroundColor: [
+            'rgba(68, 169, 233, 0.8)',
+            'rgba(0, 75, 130, 0.8)',
+            'rgba(17, 108, 181, 0.8)',
+            'rgba(162, 82, 33, 0.8)',
+            'rgba(193, 140, 36, 0.8)',
+            'rgba(230, 183, 31, 0.8)',
+            'rgba(152, 35, 26, 0.8)',
+            'rgba(199, 52, 42, 0.8)', 
 
             ],
             borderWidth: 1
@@ -194,16 +204,16 @@ var data = {
         {
             data: [question2.Yes, question2.No],
             backgroundColor: [
-              'rgba(255, 159, 64, 0.2)',
+              'rgba(0, 75, 130, 0.2)',
               'rgba(0, 0, 0, 0.2)',
 
             ],
             borderColor: [
-              'rgba(255, 159, 64, 1)',
+              'rgba(0, 75, 130, 1)',
               'rgba(0, 0, 0, 1)',
             ],
             hoverBackgroundColor: [
-              'rgba(255, 159, 64, 0.8)',
+              'rgba(0, 75, 130, 0.8)',
               'rgba(0, 0, 0, 0.8)',
             ]
         }]
@@ -220,28 +230,38 @@ var myPieChart = new Chart(ctx,{
 
 
 
+
 var ctx = document.getElementById("myChart3").getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'horizontalBar',
     data: {
-      labels: ['Stick built', 'Modular home', 'Mobile home/trailer', 'Apartment', 'Duplex', 'Other'],
+      labels: ['Stick built', 'Modular home', 'Mobile home/RV', 'Apartment', 'Duplex', 'Other'],
         datasets: [{
             data: [question1['Stick built home/traditional construction'],question1['Modular home'],question1['Mobile home or trailer'],question1['Apartment'],question1['Duplex'],question1['Other'],],
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(222, 184, 135, 0.2)',
+            'rgba(68, 169, 233, 0.2)',
+            'rgba(0, 75, 130, 0.2)',
+            'rgba(17, 108, 181, 0.2)',
+            'rgba(162, 82, 33, 0.2)',
+            'rgba(193, 140, 36, 0.2)',
+            'rgba(230, 183, 31, 0.2)',   
             ],
             borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(222, 184, 135, 1)'
+            'rgba(68, 169, 233, 1.0)',
+            'rgba(0, 75, 130, 1.0)',
+            'rgba(17, 108, 181, 1.0)',
+            'rgba(162, 82, 33, 1.0)',
+            'rgba(193, 140, 36, 1.0)',
+            'rgba(230, 183, 31, 1.0)',
+            ],
+            hoverBackgroundColor: [
+            'rgba(68, 169, 233, 0.8)',
+            'rgba(0, 75, 130, 0.8)',
+            'rgba(17, 108, 181, 0.8)',
+            'rgba(162, 82, 33, 0.8)',
+            'rgba(193, 140, 36, 0.8)',
+            'rgba(230, 183, 31, 0.8)',
+
             ],
             borderWidth: 1
         }]
