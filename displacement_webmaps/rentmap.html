@@ -28,12 +28,12 @@
             background: rgba(255, 255, 255,0.9);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 5px;
-            color: #555;
+            color: #6b8cb9;
         }
         
         .dropDown h4 {
             margin: 0 0 5px;
-            color: #555;
+            color: #0b3e6b !important;
             max-width:200px;
             word-wrap:break-word;
             margin-left:auto;
@@ -43,16 +43,16 @@
 
         .info h4 {
             margin: 0 0 5px;
-            color: #555;
             max-width:200px;
             word-wrap:break-word;
             margin-left:auto;
             margin-right:auto;
+            color: #0b3e6b !important;
         }
         
         .legend {
             line-height: 18px;
-            color: #555;
+            color: #6b8cb9;
         }
         
         .legend i {
@@ -70,7 +70,6 @@
              box-shadow: 0 0 15px rgba(0,0,0,0.2);
              border-radius: 5px;
              width:217px;
-
         }
 
 
@@ -79,7 +78,7 @@
             margin-right: auto;
             display: block;
             text-align-last: center;
-            color: #555;
+            color: #6b8cb9;
             font-family:'Open Sans', sans-serif;
              width: 150px;
         }
@@ -105,7 +104,7 @@
              var map = L.map('map').setView([39.826064, -96], 4);            
         }
         var Acetate_all = L.tileLayer('http://b.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', {
-    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a> | Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a> | Median rent estimates (2008, 2018) by <a href= "https://www.huduser.gov/portal/datasets/50per.html">HUD</a> | Inflation calculator by <a href="https://www.bls.gov/data/inflation_calculator.htm">BLS</a> | Prepared by <a href="http://www.bigwaterconsulting.net">Big Water Consulting</a>',
+    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a> | Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a> | <a href= "https://www.huduser.gov/portal/datasets/50per.html">Median Rent Estimates</a> | <a href="https://www.bls.gov/data/inflation_calculator.htm">Inflation Calculator</a> | Prepared by <a href="http://www.bigwaterconsulting.net">Big Water Consulting</a>',
     subdomains: '0123',
     minZoom: 3,
     maxZoom: 15
@@ -127,7 +126,7 @@
         info.update = function (props) {   //Updates info box when hovering over based on which variable is selected
             switch (mod){
             case 'studio':
-                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>Studio rent, 2008*:</td> <td>$' + numberWithCommas(Math.round(props.b0_i)) +'</td>'
                     +'<tr><td>Studio rent, 2018:</td> <td>$' + numberWithCommas((props.rent)) +'</td>'
@@ -136,7 +135,7 @@
                     : 'Hover over or click on a region');
             break;
             case 'one_br':
-                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>One bedroom rent, 2008*:</td> <td>$' + numberWithCommas(Math.round(props.b1_i)) +'</td>'
                     +'<tr><td>One bedroom rent, 2018:</td> <td>$' + numberWithCommas((props.re_1)) +'</td>'
@@ -145,7 +144,7 @@
                     : 'Hover over or click on a region');
             break;
             case 'two_br':
-                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>Two bedroom rent, 2008*:</td> <td>$' + numberWithCommas(Math.round(props.b2_i)) +'</td>'
                     +'<tr><td>Two bedroom rent, 2018:</td> <td>$' + numberWithCommas((props.re_2)) +'</td>'
@@ -154,7 +153,7 @@
                     : 'Hover over or click on a region');
             break;
             case 'three_br':
-               this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+               this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>Three bedroom rent, 2008*:</td> <td>$' + numberWithCommas(Math.round(props.b3_i)) +'</td>'
                     +'<tr><td>Three bedroom rent, 2018:</td> <td>$' + numberWithCommas((props.re_3)) +'</td>'
@@ -163,7 +162,7 @@
                     : 'Hover over or click on a region');
             break;
             case 'four_br':
-               this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+               this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>Four bedroom rent, 2008*:</td> <td>$' + numberWithCommas(Math.round(props.b4_i)) +'</td>'
                     +'<tr><td>Four bedroom rent, 2018:</td> <td>$' + numberWithCommas((props.re_4)) +'</td>'
@@ -179,7 +178,7 @@
         var dropDown = L.control({position: 'bottomright'});   //creates a drop-down menu control/div for selecting variables
         dropDown.onAdd = function (map) {
             this._div = L.DomUtil.create('div', 'dropDown');
-            this._div.innerHTML = ( '<h4 style="text-align: center;"">Select a Variable to Explore</h4>' +
+            this._div.innerHTML = ( '<h4 style="text-align: center;"">Select Number of Bedrooms</h4>' +
                     '<select onchange="getval(this.value, event);" onclick="disProp(event);" onfocus="disProp(event);"><option value="studio" >Studio</option><option value="one_br" selected>One Bedroom</option><option value="two_br">Two Bedrooms</option><option value="three_br">Three Bedrooms</option><option value="four_br">Four Bedrooms</option></select>');
             return this._div;
         };
@@ -214,7 +213,6 @@
                     d >= -150  ? '#d9ef8b' :
                     d >= -300  ? '#91cf60' :
                              '#1a9850' ;
-   
          }
 
 
