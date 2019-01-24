@@ -27,20 +27,19 @@
         .info {
             padding: 6px 8px;
             font: 16px Arial, Helvetica, sans-serif;
-            background: white;
-            background: rgba(255, 255, 255,0.8);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            border-radius: 5px;    
+            border-radius: 5px;
+            color: #6b8cb9;    
         }
         
         .info h4 {
             margin: 0 0 5px;
-            color: #777;
+            color: #0b3e6b;
         }
         
         .legend {
             line-height: 18px;
-            color: #555;
+            color: rgba(26,26,26,.82);
         }
         
         .legend i {
@@ -51,7 +50,7 @@
             opacity: 0.7;
         }
         h4{
-            color:grey;
+            color:rgba(26,26,26,.82);
         }
         .leaflet-control-layers-expanded{
             /*width:396px !important;*/
@@ -62,14 +61,14 @@
         }
         span .spanny{
             font-family: open sans !important;
-            color:grey !important;
+            color:rgba(26,26,26,.82) !important;
             text-align: center !important; 
         }
         .leaflet-control-layers-base{
-            color:grey !important;
+            color:rgba(26,26,26,.82) !important;
         }
         .leaflet-control-layers-overlays{
-            color:grey !important;
+            color:rgba(26,26,26,.82) !important;
         }
         .leaflet-control-layers.leaflet-control-layers-expanded.leaflet-control{
             bottom:10px;
@@ -110,8 +109,8 @@
 
         info.update = function (props) {
             this._div.innerHTML = (props ? '<h4 style="text-align: center;">Intersection of Opportunity Zones and <br>American Indian/Alaska Native Areas/Hawaiian Home Lands</h4>'
-                +'<div class="spanny" style="font-family:open sans; text-align:center; color:grey">' + props.NAMELSAD + '</div>'
-                : '<h4 style="text-align: center;">Intersection of Opportunity Zones and <br>American Indian/Alaska Native Areas/Hawaiian Home Lands</h4>'+'<div class="spanny" style="font-family:open sans; text-align:center;color:grey">Hover over an Opportuntiy Zone to see what county<br> or American Indian/Alaska Native/Native Hawaiian (AIAN)<br> area the Opportunity Zone is located within.</div>');
+                +'<div class="spanny" style="font-family:open sans; text-align:center;">' + props.NAMELSAD + '</div>'
+                : '<h4 style="text-align: center;">Intersection of Opportunity Zones and <br>American Indian/Alaska Native Areas/Hawaiian Home Lands</h4>'+'<div class="spanny" style="font-family:open sans; text-align:center;">Hover over an Opportuntiy Zone to see what county<br> or American Indian/Alaska Native/Native Hawaiian (AIAN)<br> area the Opportunity Zone is located within.</div>');
         };
 
         info.addTo(map);        

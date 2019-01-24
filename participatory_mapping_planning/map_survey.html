@@ -55,8 +55,7 @@
       top: 300px;
     }
     h3{
-      /*/*BWC blue:
-      color: #486382 !important;*/
+      color: #0b3e6b !important;
     }
     #instructions {
       position: absolute;
@@ -76,7 +75,7 @@
       font-size: 1.13em;
       z-index: 99999;
       display:block;
-      color: #337ab7 !important;
+      color: #6b8cb9 !important;
   }
   #theX{
       cursor:pointer;
@@ -136,7 +135,7 @@
 
 <body>
   <div class="container text-center">
-    <h3><a>Community Mapping Project</a></h3>
+    <h3>Community Mapping Project</h3>
   </div>
   <div class="map">
     <div id="map"></div>
@@ -152,7 +151,7 @@
   </div>
 
   <div id = "instructions">
-      <h4>Instructions</h4> This is an example of a community mapping project.<br><br>Select markers using the buttons to the right and click on the locations in the community where you and members of your household participate in the following activities:<br> &#8226; Where do you and members of your household exercise?<br>&#8226; Where do you and members of your household buy groceries?<br> &#8226; Where do you and members of your household access healthcare?<br><br> Once they are placed, you can click on them to bring up the option to delete them, or click and drag to move them around.<br><br>Once you are finished, click "Submit map." <br><br><a class="btn btn-success center-block theX" id= "theOK">OK</a><div id="theX" class="theX"><b>×</b></div>
+      <h4>Instructions</h4> This is an example of a community mapping project.<br><br>Select markers using the buttons to the right and click on the locations in the community to answer the following questions:<ul><li>Where do you and members of your household exercise?</li><li>Where do you and members of your household buy groceries?</li><li> Where do you and members of your household access healthcare?</li></ul> Once placed, you can click on the markers to bring up the option to delete them, or click and drag to move them around.<br><br>Once you are finished, click "Submit map." <br><br><a class="btn btn-success center-block theX" id= "theOK">OK</a><div id="theX" class="theX"><b>×</b></div>
   </div>
 
 
@@ -341,19 +340,19 @@
     // Set the background color to the marker selector
     function setmarker_color(current_marker_type){
       if (current_marker_type == "one"){
-        $("#one").css({'border': '3px solid #5cb85c'});
+        $("#one").css({'border': '3px solid #28a745'});
         $("#two").css({'border': 'none'});
         $("#three").css({'border': 'none'});
       }
       if (current_marker_type == "two"){
         $("#one").css({'border': 'none'});
-        $("#two").css({'border': '3px solid #5cb85c'});
+        $("#two").css({'border': '3px solid #28a745'});
         $("#three").css({'border': 'none'});
       }
      if (current_marker_type == "three"){
         $("#one").css({'border': 'none'});
         $("#two").css({'border': 'none'});
-        $("#three").css({'border': '3px solid #5cb85c'});
+        $("#three").css({'border': '3px solid #28a745'});
       }
     };
     // Close instructions 
