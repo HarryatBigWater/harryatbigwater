@@ -27,12 +27,13 @@
              background: rgba(255, 255, 255,0.8);
              box-shadow: 0 0 15px rgba(0,0,0,0.2);
              border-radius: 5px;
+             color: rgba(26,26,26,.82);
              
     }
 
     .legend {
             line-height: 18px;
-            color: #555;
+            color: rgba(26,26,26,.82);
         }
 
         .legend i {
@@ -137,7 +138,7 @@
     var dropDown = L.control({position: 'bottomleft'});   //creates a drop-down menu control/div for selecting variables
     dropDown.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'dropDown');
-        this._div.innerHTML = ( '<span style="display: block; margin: 0px auto;  line-height: 15px; text-align: center;"><font color = "gray"; size="2.5">Select a Variable to Explore</font></span>' +
+        this._div.innerHTML = ( '<span style="display: block; margin: 0px auto;  line-height: 15px; text-align: center;"><font size="2.5">Select a Variable to Explore</font></span>' +
                 '<select onchange="getval(this.value, event);" onclick="disProp(event);" onfocus="disProp(event);"><option value="value2" selected>Type of Recognized Land</option><option value="value3">Distance to Urbanized Area</option><option value="value4">% American Indian/Alaska Native</option><option value="value5">Median Household Income</option><option value="value6">Housing Units</option></select>');
         return this._div;
     };
@@ -255,30 +256,30 @@
             switch (mod){
             case 'value2':
                 this._div.innerHTML = (props ?
-                '<b>' + props.NAME + '</b><br />' + 'Type:  ' + props.LType  + '<br />' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
-                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>');
+                '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>' + props.NAME + '</b></span><br />' + 'Type:  ' + props.LType  + '<br />' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             break;
             case 'value3':
                 var dist= Nround(props.DMi,0);
                  this._div.innerHTML = (props ?
-                '<b>' + props.NAME + '</b><br />' +  dist + ' miles to nearest urbanized area' + '<br />' +
+                '<span style="display: block; text-align: center; height: 0"><b>' + props.NAME + '</b></span><br />' +  dist + ' miles to nearest urbanized area' + '<br />' +
                 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
-                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>');
+                : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             break;
             case 'value4':
                 this._div.innerHTML = (props ?
-                '<b>' + props.NAME + '</b><br />' + Nround(props.AIComP,1) + '% identify as American Indian/Alaska Native'  + '<br />' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
-                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>');
+                '<span style="display: block; text-align: center; height: 0"><b>' + props.NAME + '</b></span><br />' + Nround(props.AIComP,1) + '% identify as American Indian/Alaska Native'  + '<br />' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             break;
             case 'value5':
                 this._div.innerHTML = (props ?
-                '<b>' + props.NAME + '</b><br>$' + (props.MedHIn).commafy() + ' Median Household Income' + '<br>' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
-                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>');
+                '<span style="display: block; text-align: center; height: 0"><b>' + props.NAME + '</b></span><br>$' + (props.MedHIn).commafy() + ' Median Household Income' + '<br>' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             break;
             case 'value6':
                 this._div.innerHTML = (props ?
-                '<b>' + props.NAME + '</b><br />' + (props.OccUnt).commafy() + ' Occupied housing units'  + '<br>' + 'Unit total: ' + (props.UntTot).commafy() + '<em><font size =  2>  (Reservation and Trust)</font></em>' + '<br>' + Nround(props.Pvac,1) + '% Vacant units'
-                : '<br /><font size = 3><b>Recognized Tribal Land in the US</b></font>' + '<br /><br />' + '<span style="display: block; margin: 0px auto; text-align: center;">Hover over an area</span>'); 
+                '<span style="display: block; text-align: center; height: 0"><b>' + props.NAME + '</b></span><br />' + (props.OccUnt).commafy() + ' Occupied housing units'  + '<br>' + 'Unit total: ' + (props.UntTot).commafy() + '<em><font size =  2>  (Reservation and Trust)</font></em>' + '<br>' + Nround(props.Pvac,1) + '% Vacant units'
+                : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             };
         };
         info.addTo(map);
