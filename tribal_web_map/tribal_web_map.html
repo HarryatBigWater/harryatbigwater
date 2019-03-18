@@ -16,13 +16,13 @@
 
         html, body, #map {
             height: 100%;
-            font-family: open sans !important;
+            font-family: open sans, sans-serif !important;
         }
 
 
         .info {
              padding: 2px 8px;
-             font: 14px/16px Arial, Helvetica, sans-serif;
+             font: 14px/16px "open sans", sans-serif;
              background: white;
              background: rgba(255, 255, 255,0.8);
              box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -46,16 +46,19 @@
 
     .dropDown {
             padding: 4px 4px;
-             font: 12px/14px Arial, Helvetica, sans-serif;
+             font: 14px "open sans", sans-serif;
              background: white;
              background: rgba(255, 255, 255,0.8);
              box-shadow: 0 0 15px rgba(0,0,0,0.2);
              border-radius: 5px;
+             color: #0b3e6b !important;
 
     }
     
-    .leaflet-bottom .dropDown {
-        margin-bottom: 37px;
+    .dropDown {
+        /*position:absolute;
+        bottom: 15px;
+        right: 15px;*/
     }
     </style>
 </head>
@@ -135,10 +138,10 @@
         return String(this).commafy();
     }
     
-    var dropDown = L.control({position: 'bottomleft'});   //creates a drop-down menu control/div for selecting variables
+    var dropDown = L.control({position: 'bottomleft'});   // {position: 'bottomright'}creates a drop-down menu control/div for selecting variables
     dropDown.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'dropDown');
-        this._div.innerHTML = ( '<span style="display: block; margin: 0px auto;  line-height: 15px; text-align: center;"><font size="2.5">Select a Variable to Explore</font></span>' +
+        this._div.innerHTML = ( '<span style="display: block; margin: 0px auto;  line-height: 15px; text-align: center;><font size="2.5"; color ="#0b3e6b"><b>Select a Variable to Explore</b></font></span>' +
                 '<select onchange="getval(this.value, event);" onclick="disProp(event);" onfocus="disProp(event);"><option value="value2" selected>Type of Recognized Land</option><option value="value3">Distance to Urbanized Area</option><option value="value4">% American Indian/Alaska Native</option><option value="value5">Median Household Income</option><option value="value6">Housing Units</option></select>');
         return this._div;
     };
@@ -179,7 +182,7 @@
                     this._div = L.DomUtil.create('div', 'info legend'),
                         grades = [0, 2500, 25000, 40000, 60000, 88000],
                         labels = ["No data", 2500 + " &ndash; " + 25000, 25000 + " &ndash; " + 40000, 40000 + " &ndash; " + 60000, 60000 + " &ndash; " + 88000, 88000];
-            legend._div.innerHTML+= '<span style="display:block; text-align: center;"><b>Median Household<br/>           Income ($)</b></span>';
+            legend._div.innerHTML+= '<span style="display:block; text-align: center; color:#0b3e6b"><b>Median Household<br/>           Income ($)</b></span>';
                     for (var i = 0; i < grades.length; i++) {
                         legend._div.innerHTML +=
                         '<i style="background:' + econColor(grades[i] + 1) + '"></i> ' +
@@ -192,7 +195,7 @@
                         this._div = L.DomUtil.create('div', 'info legend'),
                             grades = [0, 15, 40, 65, 90],
                             labels = [];
-            legend._div.innerHTML+= '<span><b>% Identifying as AIAN</b></span>' + '<br/>';
+            legend._div.innerHTML+= '<span style="color:#0b3e6b"><b>% Identifying as AIAN</b></span>' + '<br/>';
                         for (var i = 0; i < grades.length; i++) {
                             legend._div.innerHTML +=
                             '<i style="background:' + aianColor(grades[i] + 1) + '"></i> ' +
@@ -205,7 +208,7 @@
             this._div = L.DomUtil.create('div', 'info legend'),
             grades = ["Federally Recognized Reservation", "AK Native Village Statistical Area", "Off-Reservation Trust Land", "Hawaiian Home Land", "OK Tribal Statistical Area", "State Reservation or Area", "Tribal Designated Statistical Area"],
             labels = ["Federally Recognized Reservation", "AK Native Village Statistical Area", "Off-Reservation Trust Land", "Hawaiian Home Land", "OK Tribal Statistical Area", "State Reservation or Area", "Tribal Designated Statistical Area"];
-            legend._div.innerHTML+= '<span style="display: block; text-align: center; height: 0"><b>Land/Area Category</b></span><br/>' ;
+            legend._div.innerHTML+= '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Land/Area Category</b></span><br/>' ;
             for (var i = 0; i < labels.length; i++) {
             legend._div.innerHTML +=
                 '<i style="background:' + landColor(grades[i]) + '"></i> ' +
@@ -218,7 +221,7 @@
             this._div = L.DomUtil.create('div', 'info legend'),
             grades = [0, 50, 150, 300, 600],
             labels = [];
-            legend._div.innerHTML = '<span style="display: block; text-align: center; height: 0 "><b>Distance to Urbanized Area</b></span><br/><em>(50,000 or more people)</em><br />';
+            legend._div.innerHTML = '<span style="display: block; text-align: center; height: 0; color:#0b3e6b"><b>Distance to Urbanized Area</b></span><br/><em>(50,000 or more people)</em><br />';
             
             for (var i = 0; i < grades.length; i++) {
             legend._div.innerHTML +=
@@ -232,7 +235,7 @@
             this._div = L.DomUtil.create('div', 'info legend'),
             grades = [0, 500, 2000, 5000, 15000],
             labels = [];
-            legend._div.innerHTML = '<span style="display: block; text-align: center; height: 0"><b>Occupied Housing Units</b></span><br/>';
+            legend._div.innerHTML = '<span style="display: block; text-align: center; height: 0; color:#0b3e6b"><b>Occupied Housing Units</b></span><br/>';
             for (var i = 0; i < grades.length; i++) {
             legend._div.innerHTML +=
              '<i style="background:' + unitColor(grades[i] + 1) + '"></i> ' +
@@ -262,23 +265,23 @@
             case 'value3':
                 var dist= Nround(props.DMi,0);
                  this._div.innerHTML = (props ?
-                '<span style="display: block; text-align: center; height: 0"><b>' + props.NAME + '</b></span><br />' +  dist + ' miles to nearest urbanized area' + '<br />' +
+                '<span style="display: block; text-align: center; height: 0; color:#0b3e6b"><b>' + props.NAME + '</b></span><br />' +  dist + ' miles to nearest urbanized area' + '<br />' +
                 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
                 : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             break;
             case 'value4':
                 this._div.innerHTML = (props ?
-                '<span style="display: block; text-align: center; height: 0"><b>' + props.NAME + '</b></span><br />' + Nround(props.AIComP,1) + '% identify as American Indian/Alaska Native'  + '<br />' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                '<span style="display: block; text-align: center; height: 0; color:#0b3e6b"><b>' + props.NAME + '</b></span><br />' + Nround(props.AIComP,1) + '% identify as American Indian/Alaska Native'  + '<br />' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
                 : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             break;
             case 'value5':
                 this._div.innerHTML = (props ?
-                '<span style="display: block; text-align: center; height: 0"><b>' + props.NAME + '</b></span><br>$' + (props.MedHIn).commafy() + ' Median Household Income' + '<br>' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
+                '<span style="display: block; text-align: center; height: 0; color:#0b3e6b"><b>' + props.NAME + '</b></span><br>$' + (props.MedHIn).commafy() + ' Median Household Income' + '<br>' + 'Population: ' + (props.TPop).commafy() + ' <em><font size =  2> (Reservation and Trust) </font> </em>'
                 : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             break;
             case 'value6':
                 this._div.innerHTML = (props ?
-                '<span style="display: block; text-align: center; height: 0"><b>' + props.NAME + '</b></span><br />' + (props.OccUnt).commafy() + ' Occupied housing units'  + '<br>' + 'Unit total: ' + (props.UntTot).commafy() + '<em><font size =  2>  (Reservation and Trust)</font></em>' + '<br>' + Nround(props.Pvac,1) + '% Vacant units'
+                '<span style="display: block; text-align: center; height: 0; color:#0b3e6b"><b>' + props.NAME + '</b></span><br />' + (props.OccUnt).commafy() + ' Occupied housing units'  + '<br>' + 'Unit total: ' + (props.UntTot).commafy() + '<em><font size =  2>  (Reservation and Trust)</font></em>' + '<br>' + Nround(props.Pvac,1) + '% Vacant units'
                 : '<span style="display: block; text-align: center; height: 0; color: #0b3e6b"><b>Recognized Tribal Land in the US</b></span>' + '<br><em>Hover over an area</em></span>');
             };
         };
@@ -492,9 +495,6 @@
         legend.addTo(map);
         //dropDown.addTo(map);
     };
-    
-    
-    
     
     
     }); //contains everything in jquery except disProp(e) and mod/other map elements
