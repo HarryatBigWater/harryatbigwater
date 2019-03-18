@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+ 
+<html>
+ 
+<head>
+ 
+<title>Big Water Consulting Client Map</title>
+ 
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<!-- 
+ --><link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+    <!-- Mapbox GL -->
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+
+<style>
+    body, #map {
+            margin: 0;
+            position: relative;
+        }
+    html, body, #map { height: 100% }
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+    font-family: "Open Sans",sans-serif;
+    line-height: 1.2;
+}
+
+.leaflet-zoom-anim  .leaflet-zoom-animated {
+  duration:2;
+}
+
+.leaflet-popup-content {
+  text-align: center;
+  color: black;
+  font-weight: 300;
+  width: 175px;
+  font-size: 10px;
+}
+
+#popupimg {
+  color: black;
+}
+
+#popupimg img {
+  width: 100%;
+  height: 75%;
+}
+
+/* css to customize Leaflet default styles  */
+/*.custom .leaflet-popup-tip,
+.custom .leaflet-popup-content-wrapper {
+    background: #e93434;
+    color: #ffffff;
+}*/
+</style>
+
+</head>
+
+<body>
+
+    <!-- place holder for map -->
+    <div id="map"></div>
+
+<script>
+ var token = 'pk.eyJ1Ijoic2Fta2d1ZXJyZXJvIiwiYSI6ImNpZ2xvejdxcTAyMTR1YWtyMm43YTNsc2QifQ.bwV2-5rCqbn5ITvF1F6AJw'
+    //  create map object, tell it to live in 'map' div and give initial latitude, longitude, zoom values 
+
+        if ($(window).width() > 1460 & $(window).height() > 900){
+             var map = L.map('map', {scrollWheelZoom:false}).setView([55, -100], 4);
+        } else{
+             var map = L.map('map', {scrollWheelZoom:false}).setView([55, -96], 3);            
+        }
+
+    //  add base map tiles from OpenStreetMap and attribution info to 'map' div
+
+    // create custom icon
+    var marker = L.icon({
+        iconUrl: './imgs/marker.png',
+        iconSize: [20, 30], // size of the icon
+        popupAnchor: [0,-15]
+        });
+
+    // create popup contents
+    
+    // specify popup options 
+    var customOptions =
+        {
+        'maxWidth': '250',
+        'maxHeight': '200',
+        'className' : 'custom'
+        }
+    
+    // specify popup options 
+    var customOptions =
+        {
+        'maxWidth': '250',
+        'maxHeight': '200',
+        'className' : 'custom'
+        }
+    
+    function onEachFeature(feature, layer) {
+        // console.log(feature);
+        custom_popup = '<h3>'+feature.properties.curl+'</h3>' + feature.properties.cimage, 
+        layer.bindPopup(custom_popup, customOptions);
+    }
+
+    var data = {
+        "type": "FeatureCollection",
+        "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-102.52550840377808, 43.02738057122698]
+                },
+                "properties": {
+                    "name": "OSLH",
+                    "refid": "oslh",
+                    "url": "http://bigwaterconsulting.net/project/tribal-data-integration/",
+                    "formalname": "Oglala Sioux Lakota Housing",
+                    "descriptio": "Pine Ridge Indian Reservation, Pine Ridge, South Dakota",
+                    "image": "<img src=\"https://c1.staticflickr.com/1/418/32806064332_c55c9de256_m.jpg\" width=\"250\" height=\"125\"></a>",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/dakota-housing-needs\" target=\"_blank\">Oglala Sioux Lakota Housing</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/dakota-housing-needs' target=\"_blank\"><img src=\"./imgs/OSLH.png\" width=\"127px\" height=\"100px\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-90.80414772033691, 44.30671401025709]
+                },
+                "properties": {
+                    "name": "Ho Chunk Nation",
+                    "refid": "hochunknation",
+                    "url": "http://bigwaterconsulting.net/our-projects",
+                    "formalname": "Ho-Chunk Nation",
+                    "descriptio": "Ho-Chunk Nation, Wisconsin",
+                    "image": "<img src=\"https://c1.staticflickr.com/3/2362/32116602494_d54ce4c94d_m.jpg\" width=\"200\" height=\"200\"></a>",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/our-projects\" target=\"_blank\">Ho-Chunk Nation</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/our-projects' target=\"_blank\"><img src=\"./imgs/HoChunk.jpg\" width=\"127\" height=\"127\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-117.2962188720703, 48.331604280708305]
+                },
+                "properties": {
+                    "name": "Kalispel",
+                    "refid": "kalispel",
+                    "url": "http://bigwaterconsulting.net/project/kalispel-tribe-indians-census/",
+                    "formalname": "Kalispel Tribe of Indians",
+                    "descriptio": "Kalispel, Usk-Cusick, Washington",
+                    "image": "<img src=\"https://c1.staticflickr.com/3/2146/32579209860_cc64725c9f_m.jpg\" width=\"200\" height=\"150\"></a>",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/our-projects/\" target=\"_blank\">Kalispel Tribe of Indians</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/our-projects/' target=\"_blank\"><img src=\"imgs/Kalispel.jpg\" width=\"127\" height=\"100\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-112.41039276123047, 43.02389814653209]
+                },
+                "properties": {
+                    "name": "SBT",
+                    "refid": "sbt",
+                    "url": "http://bigwaterconsulting.net/project/our-projects",
+                    "formalname": "Shoshone-Bannock Tribes",
+                    "descriptio": "Fort Hall Indian Reservation, Fort Hall, Idaho",
+                    "image": "<img src=\"https://c1.staticflickr.com/3/2866/32806064322_e7412f28da.jpg\" width=\"200\" height=\"200\"></a>",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/our-projects\" target=\"_blank\">Shoshone-Bannock Tribes</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/our-projects' target=\"_blank\"><img src=\"./imgs/ShoshoneBannock.jpg\" width=\"127\" height=\"127\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-100.83569526672363, 43.26808129519191]
+                },
+                "properties": {
+                    "name": "Rosebud Sioux Tribe",
+                    "refid": "rosebudswa",
+                    "url": "http://bigwaterconsulting.net/project/sicangu-wicoti-awayankapi-unit-assessment-household-survey/",
+                    "formalname": "Rosebud",
+                    "descriptio": "Rosebud Indian Reservation, Rosebud, South Dakota",
+                    "image": "<img src=\"https://c1.staticflickr.com/3/2649/32579209970_5e7c3f5718_m.jpg\" width=\"127\" height=\"100\"></a>",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/to-nation-4tlcz\" target=\"_blank\">Rosebud</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/to-nation-4tlcz' target=\"_blank\"><img src=\"./imgs/Rosebud.jpg\" width=\"150\" height=\"100\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-111.86601161956787, 31.91830988735532]
+                },
+                "properties": {
+                    "name": "TOKA",
+                    "refid": "toka",
+                    "url": "http://bigwaterconsulting.net/project/tohono-oodham-kiki-association-census/",
+                    "formalname": "Tohono O'odham",
+                    "descriptio": "Tohono O'odham Indian Reservation, Sells, Arizona",
+                    "image": "<img src=\"https://c1.staticflickr.com/1/585/32579210160_824feddbf6_k.jpg\" width=\"200\" height=\"200\"></a>",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/to-nation\" target=\"_blank\">Tohono O'odham</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/to-nation' target=\"_blank\"><img src=\"./imgs/TO.jpg\" width=\"127\" height=\"127\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-122.23598957061766, 48.50406637978778]
+                },
+                "properties": {
+                    "name": "Central Skagit Library",
+                    "refid": "centralskagitlibrary",
+                    "url": "http://bigwaterconsulting.net/project/central-skagit-library-mapping/",
+                    "formalname": "Central Skagit Library",
+                    "descriptio": "Central Skagit Library,  Sedro-Woolley, Washington",
+                    "image": "<img src=\"https://c1.staticflickr.com/1/735/32579209800_1b189ac39a.jpg\" width=\"200\" height=\"125\"></a>",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/project/central-skagit-library-mapping/\" target=\"_blank\">Central Skagit Library</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/project/central-skagit-library-mapping/' target=\"_blank\"><img src=\"./imgs/CentralSkagitLibrary.jpg\" width=\"160\" height=\"80\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-100.16273819003081, 44.36452786744143]
+                },
+                "properties": {
+                    "name": "South Dakota Native Homeownership Coalition",
+                    "refid": "sdnhc",
+                    "url": "http://bigwaterconsulting.net/project/south-dakota-native-homeownership-coalition-studies/",
+                    "formalname": "South Dakota Native Homeownership Coalition",
+                    "descriptio": "South Dakota Native Homeownership Coalition, South Dakota",
+                    "image": "<img src=\"https://c1.staticflickr.com/5/4226/34717835206_356f0676ed_o.png\" width=\"200\" height=\"125\"></a>",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/to-nation-k5ly4\" target=\"_blank\">South Dakota Native Homeownership Coalition</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/to-nation-k5ly4' target=\"_blank\"><img src=\"./imgs/sdnhc.png\" width=\"150\" height=\"125\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-90.789586, 46.929063]
+                },
+                "properties": {
+                    "name": "Red Cliff",
+                    "refid": "redcliff",
+                    "url": "",
+                    "formalname": "Red Cliff Band",
+                    "descriptio": "Red Cliff Band of Lake Superior Chippewa, Tribal Census",
+                    "image": "",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/red-cliff-census\" target=\"_blank\">Red Cliff Band</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/red-cliff-census' target=\"_blank\"><img src=\"./imgs/RedCliff.gif\" height=\"127\" width=\"127\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-86.195587, 41.946317]
+                },
+                "properties": {
+                    "name": "Pokagon",
+                    "refid": "pokagon",
+                    "url": "",
+                    "formalname": "Pokagon Band of Potawatomi",
+                    "descriptio": "Pokagon Band of Potawatomi, Tribal Census",
+                    "image": "",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/pokagon-census\" target=\"_blank\">Pokagon Band of Potawatomi</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/pokagon-census' target=\"_blank\"><img src=\"./imgs/pokagon.png\" width=\"125\" height=\"125\"></a>"
+                }
+            },
+
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-156.772453, 71.292905]
+                },
+                "properties": {
+                    "name": "Barrow",
+                    "refid": "barrow",
+                    "url": "",
+                    "formalname": "Native Village of Barrow",
+                    "descriptio": "Native Village of Barrow, Needs Assessment",
+                    "image": "",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/to-nation-pysds\" target=\"_blank\">Native Village of Barrow</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/to-nation-pysds' target=\"_blank\"><img src=\"./imgs/barrow.png\" width=\"125\" height=\"125\"></a>"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point", 
+                    "coordinates": [-122.316920, 47.596934]
+                },
+                "properties": {
+                    "name": "SISC",
+                    "refid": "sisc",
+                    "url": "",
+                    "formalname": "Seattle Indian Services Commission",
+                    "descriptio": "Seattle Indian Services Commission, Needs Assessment",
+                    "image": "",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/sisc-assemssment\" target=\"_blank\">Seattle Indian Services Commission</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/sisc-assemssment' target=\"_blank\"><img src=\"./imgs/sisc.gif\" width=\"125\" height=\"125\"></a>"
+                }
+            }, 
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-91.361516, 45.943455]
+                },
+                "properties": {
+                    "name": "LCO",
+                    "refid": "lco",
+                    "url": "",
+                    "formalname": "Lac Courte Oreilles",
+                    "descriptio": "Lac Courte Oreilles, Community Assessment",
+                    "image": "",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/our-projects\" target=\"_blank\">Lac Courte Oreilles</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/our-projects' target=\"_blank\"><img src=\"./imgs/lco.png\" width=\"125\" height=\"125\"></a>"
+                }
+            }, 
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point", 
+                    "coordinates": [-122.857743, 38.702995]
+                },
+                "properties": {
+                    "name": "Dry Creek",
+                    "refid": "dry_creek",
+                    "url": "",
+                    "formalname": "Dry Creeek Rancheria",
+                    "descriptio": "Dry Creeek Rancheria, Needs Assessment",
+                    "image": "",
+                    "curl": "<a href=\"http://bigwaterconsulting.net/our-projects\" target=\"_blank\">Dry Creeek Rancheria</a>",
+                    "cimage": "<a href='http://bigwaterconsulting.net/our-projects' target=\"_blank\"><img src=\"./imgs/dry_creek.jpg\" width=\"76.6\" height=\"125\"></a>"
+                }
+            }
+        ]
+    }
+
+    $(document).ready(function() {
+            L.tileLayer('http://d.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a> | Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a> | Prepared by <a href="http://www.bigwaterconsulting.net">Big Water Consulting</a>'}).addTo(map);
+
+//         var gl = L.mapboxGL({
+//     accessToken: 'no-token',
+//     style: 'https://raw.githubusercontent.com/osm2vectortiles/mapbox-gl-styles/master/styles/bright-v9-cdn.json'
+// }).addTo(map);
+
+
+        L.geoJson(data, {
+          pointToLayer: function(feature, latlng) {
+            // console.log(latlng, feature);
+            return L.marker(latlng, {
+              // icon: smallIcon
+            });
+          },
+          onEachFeature: onEachFeature
+        }).addTo(map);  
+    })
+
+
+
+
+</script>
+
+</body>
+
+</html>
