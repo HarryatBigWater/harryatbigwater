@@ -78,7 +78,7 @@ h1, h2, h3, h4, h5, h6 {
         if ($(window).width() > 1460 & $(window).height() > 900){
              var map = L.map('map', {scrollWheelZoom:false}).setView([55, -100], 4);
         } else{
-             var map = L.map('map', {scrollWheelZoom:false}).setView([55, -96], 3);            
+             var map = L.map('map', {scrollWheelZoom:false}).setView([55, -100], 3);            
         }
 
     //  add base map tiles from OpenStreetMap and attribution info to 'map' div
@@ -363,7 +363,7 @@ h1, h2, h3, h4, h5, h6 {
 
         L.geoJson(data, {
           pointToLayer: function(feature, latlng) {
-            console.log(latlng, feature);
+            //console.log(latlng, feature);
 
             return L.marker(latlng);
           },
