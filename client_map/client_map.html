@@ -87,13 +87,6 @@ h1, h2, h3, h4, h5, h6 {
 
     // create popup contents
     
-    // specify popup options 
-    var customOptions =
-        {
-        'maxWidth': '250',
-        'maxHeight': '200',
-        'className' : 'custom'
-        }
     
     // specify popup options 
     var customOptions =
@@ -106,7 +99,7 @@ h1, h2, h3, h4, h5, h6 {
     function onEachFeature(feature, layer) {
         // console.log(feature);
         custom_popup = '<h3>'+feature.properties.curl+'</h3>' + feature.properties.cimage, 
-        layer.bindPopup(custom_popup, customOptions);
+        layer.bindPopup(custom_popup); // add customOptions if we want to limit the size of the popup...
     }
 
     var data = {
