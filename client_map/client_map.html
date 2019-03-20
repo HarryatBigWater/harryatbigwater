@@ -42,6 +42,11 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 10px; */
 }
 
+
+.leaflet-popup-tip-container{
+    display: none !important;
+}
+
 #popupimg {
   color: black;
 }
@@ -79,8 +84,8 @@ h1, h2, h3, h4, h5, h6 {
     //  add base map tiles from OpenStreetMap and attribution info to 'map' div
 
     // create custom icon
-    var marker = L.icon({
-        iconUrl: './imgs/marker.png',
+    var marker = L.marker({
+        //iconUrl: './imgs/marker.png',
         iconSize: [20, 30], // size of the icon
         popupAnchor: [0,-15]
         });
@@ -93,13 +98,14 @@ h1, h2, h3, h4, h5, h6 {
         {
         'maxWidth': '250',
         'maxHeight': '200',
-        'className' : 'custom'
+        'className': 'custom',
+        'top': '-200px'
         }
     
     function onEachFeature(feature, layer) {
         // console.log(feature);
         custom_popup = '<h3>'+feature.properties.curl+'</h3>' + feature.properties.cimage, 
-        layer.bindPopup(custom_popup); // add customOptions if we want to limit the size of the popup...
+        layer.bindPopup(custom_popup, customOptions); // add customOptions if we want to limit the size of the popup...
     }
 
     var data = {
@@ -357,10 +363,9 @@ h1, h2, h3, h4, h5, h6 {
 
         L.geoJson(data, {
           pointToLayer: function(feature, latlng) {
-            // console.log(latlng, feature);
-            return L.marker(latlng, {
-              // icon: smallIcon
-            });
+            console.log(latlng, feature);
+
+            return L.marker(latlng);
           },
           onEachFeature: onEachFeature
         }).addTo(map);  
