@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+
+
+<html>
+<head>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+</style>
+<style>
+  body{
+    font-family:'Open Sans', sans-serif;
+  }
+
+
+  #secondChoice{
+    display: none;
+  }
+  #thirdChoice{
+    display: none;
+  }
+
+  #loading_gif{
+    position: absolute;
+    z-index: -2;
+    margin-left:155px;
+    margin-top: 104.5px;
+  }
+  svg{
+    background-color:white !important;
+  }
+  p {
+    max-width: 540px;
+  }
+  select {
+    max-width: 540px
+  }
+
+</style>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script>
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// To do:
+
+// - label each bar with percentage 
+// - add additional axis labels (male, female)
+// - Title
+// - onhover option for graph
+// - tribal area width to be max width of chart
+
+// - map of three geographies?
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+//get data 
+
+var states_list;
+$.getJSON('https://api.census.gov/data/2017/acs/acs5?get=NAME&for=state:*&key=ec44e5e9407b4b0abe4f5c5e482435a3be5cc9fa', function(data) {
+    states_list = data;
+    states_list.shift();
+    states_list = states_list.sort()
+    // splice(position, numberOfItemsToRemove, item)
+    states_list.splice(0, 0, ['Select a State', 'null', 'null']);
+    return states_list;
+  });
+var tribal_list;
+$.getJSON('https://api.census.gov/data/2017/acs/acs5?get=NAME&for=american%20indian%20area/alaska%20native%20area/hawaiian%20home%20land:*&key=ec44e5e9407b4b0abe4f5c5e482435a3be5cc9fa', function(data) {
+    tribal_list = data;
+    tribal_list.shift();
+    tribal_list = tribal_list.sort()
+    tribal_list.splice(0, 0, ['Select a Tribal Area', 'null', 'null']);
+    return tribal_list;
+  });
+
+var counties_list;
+
+
+// 
+function filltwo(){
+  if(($('#geography').val() == "state") || ($('#geography').val() == "county")){
+  var $secondChoice = $("#secondChoice");
+      $secondChoice.empty();
+      $.each(states_list, function(index, value) {
+        $secondChoice.append("<option value='"+ value[1] +"'>" + value[0] + "</option>");
+      });
+      $('#secondChoice').css("display","inline-block")
+      if($('#geography').val() == "state"){
+        $('#thirdChoice').css("display","none")
+      }
+  } else if($('#geography').val() == "tribal"){
+    $('#thirdChoice').css("display","none")
+
+  var $secondChoice = $("#secondChoice");
+      $secondChoice.empty();
+      $.each(tribal_list, function(index, value) {
+        $secondChoice.append("<option value='"+ value[1] +"'>" + value[0] + "</option>");
+      });
+      $('#secondChoice').css("display","inline-block")
+  }
+}
+
+function fillthree(){
+  if($('#geography').val() == "county"){
+    $.getJSON('https://api.census.gov/data/2017/acs/acs5?get=NAME&&for=county:*&in=state:'+ $('#secondChoice').val()+'&key=ec44e5e9407b4b0abe4f5c5e482435a3be5cc9fa', function(data) {
+      counties_list = data;
+      counties_list.shift()
+      counties_list = counties_list.sort()
+      counties_list.splice(0, 0, ['Select a County', 'null', 'null']);
+      //console.log(counties_list)
+      fillcounties();
+    });
+    $('#thirdChoice').css("display","inline-block")
+  } else {
+    get_pyr_data();
+  }
+}
+
+function fillcounties(){
+  var $thirdChoice = $("#thirdChoice");
+      $thirdChoice.empty();
+      $.each(counties_list, function(index, value) {
+        $thirdChoice.append("<option value='"+ value[2] +"'>" + value[0].split(",")[0] + "</option>");
+      });
+}
+
+
+
+$(document).ready(function() {
+    filltwo();
+});
+
+
+data_url($('#geography').val(),$('#secondChoice').val(),$('#thirdChoice').val())
+
+function data_url(geography, state, county){
+  default_url = 'https://api.census.gov/data/2017/acs/acs5?get=NAME,B01001_003E,B01001_004E,B01001_005E,B01001_006E,B01001_007E,B01001_008E,B01001_009E,B01001_010E,B01001_011E,B01001_012E,B01001_013E,B01001_014E,B01001_015E,B01001_016E,B01001_017E,B01001_018E,B01001_019E,B01001_020E,B01001_021E,B01001_022E,B01001_023E,B01001_024E,B01001_025E,B01001_027E,B01001_028E,B01001_029E,B01001_030E,B01001_031E,B01001_032E,B01001_033E,B01001_034E,B01001_035E,B01001_036E,B01001_037E,B01001_038E,B01001_039E,B01001_040E,B01001_041E,B01001_042E,B01001_043E,B01001_044E,B01001_045E,B01001_046E,B01001_047E,B01001_048E,B01001_049E&for='
+  key = '&key=ec44e5e9407b4b0abe4f5c5e482435a3be5cc9fa'
+
+  if(geography==null || geography == "unitedstates"){
+    return default_url + "us" + key
+  } else if (geography == "state"){
+    return default_url + "state:" + state + key
+  } else if (geography == "tribal"){
+    return default_url + "american%20indian%20area/alaska%20native%20area/hawaiian%20home%20land:" + state + key
+  } else if (geography == "county"){
+    return default_url + "county:" + county + "&in=state:" + state + key
+  }
+};
+
+inited = false;
+var pyrData;
+var title;
+
+function get_pyr_data(){
+    $("#graph").empty();
+    $("#graph").empty();
+  $.getJSON(data_url($('#geography').val(),$('#secondChoice').val(),$('#thirdChoice').val()), function(data) {
+
+// Check out the data-- 
+//console.log(data)
+
+// define each bar
+// male data
+m_0 = parseInt(data[1][1]);
+m_5 = parseInt(data[1][2]);
+m_10 = parseInt(data[1][3]);
+m_15 = parseInt(data[1][4]) + parseInt(data[1][5]);
+m_20 = parseInt(data[1][6]) + parseInt(data[1][7]) + parseInt(data[1][8]);
+m_25 = parseInt(data[1][9]);
+m_30 = parseInt(data[1][10]);
+m_35 = parseInt(data[1][11]);
+m_40 = parseInt(data[1][12]);
+m_45 = parseInt(data[1][13]);
+m_50 = parseInt(data[1][14]);
+m_55 = parseInt(data[1][15]);
+m_60 = parseInt(data[1][16]) + parseInt(data[1][17]);
+m_65 = parseInt(data[1][18]) + parseInt(data[1][19]);
+m_70 = parseInt(data[1][20]);
+m_75 = parseInt(data[1][21]);
+m_80 = parseInt(data[1][22]);
+m_85 = parseInt(data[1][23]);
+
+// female data
+f_0 = parseInt(data[1][24]);
+f_5 = parseInt(data[1][25]);
+f_10 = parseInt(data[1][26]);
+f_15 = parseInt(data[1][27]) + parseInt(data[1][28]);
+f_20 = parseInt(data[1][29]) + parseInt(data[1][30]) + parseInt(data[1][31]);
+f_25 = parseInt(data[1][32]);
+f_30 = parseInt(data[1][33]);
+f_35 = parseInt(data[1][34]);
+f_40 = parseInt(data[1][35]);
+f_45 = parseInt(data[1][36]);
+f_50 = parseInt(data[1][37]);
+f_55 = parseInt(data[1][38]);
+f_60 = parseInt(data[1][39]) + parseInt(data[1][40]);
+f_65 = parseInt(data[1][41]) + parseInt(data[1][42]);
+f_70 = parseInt(data[1][43]);
+f_75 = parseInt(data[1][44]);
+f_80 = parseInt(data[1][45]);
+f_85 = parseInt(data[1][46]);
+
+title = data[1][0];
+pyrData = [
+  {group: 'Under 5', male: m_0, female: f_0},
+  {group: '5-9', male: m_5, female: f_5},
+  {group: '10-14', male: m_10, female: f_10},
+  {group: '15-19', male: m_15, female: f_15},
+  {group: '20-24', male: m_20, female: f_20},
+  {group: '25-29', male: m_25, female: f_25},
+  {group: '30-34', male: m_30, female: f_30},
+  {group: '35-39', male: m_35, female: f_35},
+  {group: '40-44', male: m_40, female: f_40},
+  {group: '45-49', male: m_45, female: f_45},
+  {group: '50-54', male: m_50, female: f_50},
+  {group: '55-59', male: m_55, female: f_55},
+  {group: '60-64', male: m_60, female: f_60},
+  {group: '65-69', male: m_65, female: f_65},
+  {group: '70-74', male: m_70, female: f_70},
+  {group: '75-79', male: m_75, female: f_75},
+  {group: '80-85', male: m_80, female: f_80},
+  {group: '85+', male: m_85, female: f_85},
+];
+inited = true;
+draw_pyramids(pyrData)
+});
+};
+
+get_pyr_data()
+</script>
+  <meta charset="utf-8">
+  <title>Population Pyramid</title>
+<style id="jsbin-css">
+svg {
+  /*border: 1px solid #ccc;*/
+}
+
+.axis line,
+.axis path {
+  shape-rendering: crispEdges;
+  fill: transparent;
+  stroke: #555;
+}
+.axis text {
+  font-size: 12px;
+  font-family: "open sans";
+}
+
+.bar {
+  fill-opacity: 0.6;
+}
+.bar.left {
+  fill: steelblue;
+}
+.bar.right {
+  fill: firebrick;
+}
+</style>
+</head>
+<body>
+
+<script id="jsbin-javascript">
+// SET UP DIMENSIONS
+var w = 500,
+    h = 300;
+    
+// margin.middle is distance from center line to each y-axis
+var margin = {
+  top: 20,
+  right: 20,
+  bottom: 24,
+  left: 20,
+  middle: 28
+};
+    
+// the width of each side of the chart
+var regionWidth = w/2 - margin.middle;
+
+// these are the x-coordinates of the y-axes
+var pointA = regionWidth,
+    pointB = w - regionWidth;
+
+
+// If it takes more than 4 seconds, the server is probably down.
+// var timeout = 1;
+
+function draw_pyramids(){
+  // if(timeout > 1){
+  //   document.getElementById("loading_gif").innerHTML = "Server error, please try again in a few seconds.";
+  // }
+  if(inited){
+        // GET THE TOTAL POPULATION SIZE AND CREATE A FUNCTION FOR RETURNING THE PERCENTAGE
+    var totalPopulation = d3.sum(pyrData, function(d) { return d.male + d.female; }),
+        percentage = function(d) { return d / totalPopulation; };
+      
+    
+    // CREATE SVG
+    var svg = d3.select('#graph').append('svg')
+      .attr('width', margin.left + w + margin.right)
+      .attr('height', margin.top + h + margin.bottom + 20)
+      // ADD A GROUP FOR THE SPACE WITHIN THE MARGINS
+      .append('g')
+        .attr('transform', translation(margin.left, margin.top));
+
+    // find the maximum data value on either side
+    //  since this will be shared by both of the x-axes
+    var maxValue = Math.max(
+      d3.max(pyrData, function(d) { return percentage(d.male); }),
+      d3.max(pyrData, function(d) { return percentage(d.female); })
+    );
+    
+
+    // SET UP SCALES
+      
+    // the xScale goes from 0 to the width of a region
+    //  it will be reversed for the left x-axis
+    var xScale = d3.scale.linear()
+      .domain([0, maxValue])
+      .range([0, regionWidth])
+      .nice();
+
+    var xScaleLeft = d3.scale.linear()
+      .domain([0, maxValue])
+      .range([regionWidth, 0]);
+
+    var xScaleRight = d3.scale.linear()
+      .domain([0, maxValue])
+      .range([0, regionWidth]);
+
+    var yScale = d3.scale.ordinal()
+      .domain(pyrData.map(function(d) { return d.group; }))
+      .rangeRoundBands([h,0], 0.1);
+
+    // SET UP AXES
+    var yAxisLeft = d3.svg.axis()
+      .scale(yScale)
+      .orient('right')
+      .tickSize(4,0)
+      .tickPadding(margin.middle-4);
+
+    var yAxisRight = d3.svg.axis()
+      .scale(yScale)
+      .orient('left')
+      .tickSize(4,0)
+      .tickFormat('');
+
+    var xAxisRight = d3.svg.axis()
+      .scale(xScale)
+      .orient('bottom')
+      .ticks(parseInt(maxValue*100)+1)
+      .tickFormat(d3.format('%'));
+
+    var xAxisLeft = d3.svg.axis()
+      // REVERSE THE X-AXIS SCALE ON THE LEFT SIDE BY REVERSING THE RANGE
+      .scale(xScale.copy().range([pointA, 0]))
+      .orient('bottom')
+      .ticks(parseInt(maxValue*100)+1)
+      .tickFormat(d3.format('%'));
+
+    // MAKE GROUPS FOR EACH SIDE OF CHART
+    // scale(-1,1) is used to reverse the left side so the bars grow left instead of right
+    var leftBarGroup = svg.append('g')
+      .attr('transform', translation(pointA, 0) + 'scale(-1,1)');
+    var rightBarGroup = svg.append('g')
+      .attr('transform', translation(pointB, 0));
+
+    // DRAW AXES
+    svg.append('g')
+      .attr('class', 'axis y left')
+      .attr('transform', translation(pointA, 0))
+      .call(yAxisLeft)
+      .selectAll('text')
+      .style('text-anchor', 'middle');
+
+    svg.append('g')
+      .attr('class', 'axis y right')
+      .attr('transform', translation(pointB, 0))
+      .call(yAxisRight);
+
+    svg.append('g')
+      .attr('class', 'axis x left')
+      .attr('transform', translation(0, h))
+      .call(xAxisLeft);
+
+    svg.append('g')
+      .attr('class', 'axis x right')
+      .attr('transform', translation(pointB, h))
+      .call(xAxisRight);
+
+    // Text labels for left bars
+    leftBarGroup.selectAll('.bar.left')
+      .data(pyrData)
+      .enter().append('text')
+        .attr("text-anchor", "end")  
+        .style("font-size", "12px") 
+        .style("text-decoration", "none")
+        .attr("transform", "scale(-1,1)")  
+        .attr('x', (function(d) { return - xScale(Math.round(percentage(d.male)*1000)/1000) - 3; }))
+        .attr('y', (function(d) { return yScale(d.group) + 11; }))
+        .text(function(d) { return Math.round(percentage(d.male) *1000)/10; })
+        .attr('height', yScale.rangeBand());
+
+    // Left (male) bars
+    leftBarGroup.selectAll('.bar.left')
+      .data(pyrData)
+      .enter().append('rect')
+        .attr('class', 'bar left')
+        .attr('x', 0)
+        .attr('y', function(d) { return yScale(d.group); })
+        .attr('width', function(d) { return xScale(Math.round(percentage(d.male)*1000)/1000); })
+        .attr('height', yScale.rangeBand());
+
+
+
+// Title of pyramid
+svg.append("text")
+        .attr("x", (w / 2))             
+        .attr("y", - 5)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "14px") 
+        .style("text-decoration", "none")  
+        .text(title);
+
+// Male label for x axis
+svg.append("text")
+        .attr("x", ((w / 4) - margin.middle))             
+        .attr("y", h + 35)
+        .attr("text-anchor", "center")  
+        .style("font-size", "12px") 
+        .style("text-decoration", "none")  
+        .text("Male");
+
+// Female label for x axis
+svg.append("text")
+        .attr("x", (w * 3/4) - 5)             
+        .attr("y", h + 35)
+        .attr("text-anchor", "center")  
+        .style("font-size", "12px") 
+        .style("text-decoration", "none")  
+        .text("Female");
+
+
+    // Text labels for right bars
+    rightBarGroup.selectAll('.bar.right')
+      .data(pyrData)
+      .enter().append('text')
+        .attr("text-anchor", "start")  
+        .style("font-size", "12px") 
+        .style("text-decoration", "none")  
+        .attr('x', function(d) { return xScale(percentage(d.female)) + 3; })
+        .attr('y', function(d) { return yScale(d.group) + 11; })
+        .text(function(d) { return Math.round(percentage(d.female) *1000)/10; })
+        .attr('height', yScale.rangeBand());
+
+    // Right (Female) Bars
+    rightBarGroup.selectAll('.bar.right')
+      .data(pyrData)
+      .enter().append('rect')
+        .attr('class', 'bar right')
+        .attr('x', 0)
+        .attr('y', function(d) { return yScale(d.group); })
+        .attr('width', function(d) { return xScale(percentage(d.female)); })
+        .attr('height', yScale.rangeBand());
+
+
+
+
+    // so sick of string concatenation for translations
+    function translation(x,y) {
+      return 'translate(' + x + ',' + y + ')';
+    }
+  }
+  else{
+    // var timeout = timeout + 1;
+    // console.log(timeout)
+    // Check again in 500ms
+    setTimeout(draw_pyramids, 500);
+  }
+};
+
+</script>
+
+
+<div id="loading_gif"><img src="loading.gif" alt="Loading..." /></div>
+<div id="graph" style="height:364px">
+</div>
+<p>
+    Select Geography:<br>
+    <select id= "geography" onchange='filltwo()' style='font-family:"Open Sans", sans-serif;'>
+     <option value = "unitedstates" selected>United States</option>
+     <option value = "state">State</option>
+     <option value = "county">County</option>
+     <option value = "tribal">Tribal Area</option>
+    </select>
+    <select id = "secondChoice" onchange='fillthree()' style='font-family:"Open Sans", sans-serif;'>
+    </select>
+    <select id = "thirdChoice" onchange='get_pyr_data()' style='font-family:"Open Sans", sans-serif;'>
+    </select>
+</p>
+
+<p> Question: Do we want our graph to round the bars as well as the numbers attached to the bars (see left), or do we think it looks better to round the numbers, but have the bars represent the actual values, as on the right? 
+<br>
+FWIW, I prefer the look of the one on the right, but the left might make more logical sense? 
+
+</p>
+</body>
+</html>
