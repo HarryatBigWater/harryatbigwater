@@ -3,7 +3,7 @@
 <html>
  
 <head>
- 
+<meta charset="utf-8"/>
 <title>Big Water Consulting Client Map</title>
  
 <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -76,9 +76,9 @@ h1, h2, h3, h4, h5, h6 {
     //  create map object, tell it to live in 'map' div and give initial latitude, longitude, zoom values 
 
         if ($(window).width() > 1460 & $(window).height() > 900){
-             var map = L.map('map', {scrollWheelZoom:false}).setView([58, -120], 4);
+             var map = L.map('map', {scrollWheelZoom:false}).setView([54, -125], 4);
         } else{
-             var map = L.map('map', {scrollWheelZoom:false}).setView([58, -120], 3);            
+             var map = L.map('map', {scrollWheelZoom:false}).setView([54, -125], 3);            
         }
 
     //  add base map tiles from OpenStreetMap and attribution info to 'map' div
@@ -110,7 +110,9 @@ h1, h2, h3, h4, h5, h6 {
 
     var data = {
         "type": "FeatureCollection",
-        "features": [{
+        "features": 
+        [
+        {
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
@@ -125,6 +127,76 @@ h1, h2, h3, h4, h5, h6 {
                     "image": "<img src=\"https://c1.staticflickr.com/1/418/32806064332_c55c9de256_m.jpg\" width=\"250\" height=\"125\"></a>",
                     "curl": "<a href=\"http://bigwaterconsulting.net/projects-blog/2019/1/30/dakota-housing-needs\" target=\"_blank\">Oglala Sioux Lakota Housing</a>",
                     "cimage": "<a href='http://bigwaterconsulting.net/projects-blog/2019/1/30/dakota-housing-needs' target=\"_blank\"><img src=\"./imgs/OSLH.png\" width=\"127px\" height=\"100px\"></a>"
+                }
+            },
+        {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-156.455404, 20.886417]
+                },
+                "properties": {
+                    "name": "Paupena CDC",
+                    "refid": "pcdc",
+                    "url": "https://www.bigwaterconsulting.net/new-blog/paupena-cdc-needs-assessment",
+                    "formalname": "Pa’upena CDC",
+                    "descriptio": "PCDC",
+                    "image": "<img src=\"https://static1.squarespace.com/static/5be730232487fdec648106ac/5c266b556d2a7347df5c4504/5e7bda6804f27251f91228d5/1585178634954/paupena_logo.png\" width=\"250\" height=\"125\"></a>",
+                    "curl": "<a href=\"https://www.bigwaterconsulting.net/new-blog/paupena-cdc-needs-assessment\" target=\"_blank\">Pa’upena CDC</a>",
+                    "cimage": "<a href='https://www.bigwaterconsulting.net/new-blog/paupena-cdc-needs-assessment' target=\"_blank\"><img src=\"https://static1.squarespace.com/static/5be730232487fdec648106ac/5c266b556d2a7347df5c4504/5e7bda6804f27251f91228d5/1585178634954/paupena_logo.png\" width=\"130px\" height=\"130px\"></a>"
+                }
+            },
+                    {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-121.167975, 47.156156]
+                },
+                "properties": {
+                    "name": "Washington State Office of Financial Management",
+                    "refid": "waofm",
+                    "url": "https://www.bigwaterconsulting.net/projects-blog/2019/3/1/census-2020",
+                    "formalname": "Washington State Office of Financial Management",
+                    "descriptio": "WAOFM",
+                    "image": "<img src=\"https://images.squarespace-cdn.com/content/5be730232487fdec648106ac/1585161731311-JFVYWGAQ893U1YRTE3SJ/Census2020.png\" width=\"250\" height=\"125\"></a>",
+                    "curl": "<a href=\"https://www.bigwaterconsulting.net/projects-blog/2019/3/1/census-2020\" target=\"_blank\">Washington State Office of Financial Management</a>",
+                    "cimage": "<a href='https://www.bigwaterconsulting.net/projects-blog/2019/3/1/census-2020' target=\"_blank\"><img src=\"https://images.squarespace-cdn.com/content/5be730232487fdec648106ac/1585161731311-JFVYWGAQ893U1YRTE3SJ/Census2020.png\" width=\"130px\" height=\"100px\"></a>"
+                }
+            },
+
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-122.903329, 47.035878]
+                },
+                "properties": {
+                    "name": "Washington State Office of Financial Management",
+                    "refid": "waofm",
+                    "url": "https://www.bigwaterconsulting.net/projects-blog/2019/3/1/census-2020",
+                    "formalname": "Washington State Office of Financial Management",
+                    "descriptio": "WAOFM",
+                    "image": "\" width=\"250\" height=\"125\"></a>",
+                    "curl": "<a href=\"https://www.bigwaterconsulting.net/projects-blog/2019/3/1/census-2020\" target=\"_blank\">Washington State Office of Financial Management</a>",
+                    "cimage": "<a href='https://www.bigwaterconsulting.net/projects-blog/2019/3/1/census-2020' target=\"_blank\"><img src=\"https://images.squarespace-cdn.com/content/5be730232487fdec648106ac/1585161731311-JFVYWGAQ893U1YRTE3SJ/Census2020.png\" width=\"130px\" height=\"130px\"></a>"
+                }
+            },
+
+                     {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-122.892967, 47.040208]
+                },
+                "properties": {
+                    "name": "Washington State Department of Commerce",
+                    "refid": "commerce",
+                    "url": "https://www.bigwaterconsulting.net/projects-blog/2019/3/1/census-2020",
+                    "formalname": "Washington State Department of Commerce",
+                    "descriptio": "WAOFM",
+                    "image": "\" width=\"250\" height=\"125\"></a>",
+                    "curl": "<a href=\"https://www.bigwaterconsulting.net/washington-housing-study\" target=\"_blank\">Washington State Department of Commerce</a>",
+                    "cimage": "<a href='https://www.bigwaterconsulting.net/washington-housing-study' target=\"_blank\"><img src=\"https://images.squarespace-cdn.com/content/v1/5be730232487fdec648106ac/1584658710063-VBMTRL9RX72SJUECNP0F/ke17ZwdGBToddI8pDm48kDlNXdagKCqnn0ap7Bw_ea1Zw-zPPgdn4jUwVcJE1ZvWhcwhEtWJXoshNdA9f1qD7WT60LcluGrsDtzPCYop9hMSmaIdITlUn0bvWJGLvDndzMn2cVi6AKKuzRisw7eYlw/doclogo.png\" width=\"150px\" height=\"100px\"></a>"
                 }
             },
 
