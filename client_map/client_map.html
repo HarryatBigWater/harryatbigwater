@@ -80,9 +80,9 @@ h1, h2, h3, h4, h5, h6 {
     //  create map object, tell it to live in 'map' div and give initial latitude, longitude, zoom values
 
         if ($(window).width() > 1460 & $(window).height() > 900){
-             var map = L.map('map', {scrollWheelZoom:false, maxBounds: maxBounds}).setView([40, -95], 10).fitBounds(maxBounds);
+             var map = L.map('map', {scrollWheelZoom:false, center: [0, 0], zoom: 0, maxBounds: maxBounds}).setView([40, -95], 4).fitBounds(maxBounds);
         } else{
-             var map = L.map('map', {scrollWheelZoom:false, maxBounds: maxBounds}).setView([40, -95], 8).fitBounds(maxBounds);
+             var map = L.map('map', {scrollWheelZoom:false, center: [0, 0], zoom: 0, maxBounds: maxBounds}).setView([40, -95], 3).fitBounds(maxBounds);
         }
 
     //  add base map tiles from OpenStreetMap and attribution info to 'map' div
