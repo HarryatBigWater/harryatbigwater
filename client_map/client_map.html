@@ -72,23 +72,14 @@ h1, h2, h3, h4, h5, h6 {
     <div id="map"></div>
 
 <script>
- var maxBounds = [
-    [25, -120], //Southwest
-    [50, -60]  //Northeast
-];
-
- var maxBoundsTEST = L.latLngBounds(
-    L.latLng(5.499550, -167.276413), //Southwest
-    L.latLng(83.162102, -52.233040)  //Northeast
-);
  var token = 'pk.eyJ1Ijoic2Fta2d1ZXJyZXJvIiwiYSI6ImNpZ2xvejdxcTAyMTR1YWtyMm43YTNsc2QifQ.bwV2-5rCqbn5ITvF1F6AJw'
     //  create map object, tell it to live in 'map' div and give initial latitude, longitude, zoom values
 
-        if ($(window).width() > 1460 & $(window).height() > 900){
-             var map = L.map('map', {scrollWheelZoom:false, center: [0, 0], zoom: 0, maxBounds: maxBounds, zoomSnap: 5}).fitBounds(maxBounds);
+             var map = L.map('map', {scrollWheelZoom:false}).setView([54, -125], 4);
+             var map = L.map('map', {scrollWheelZoom:false}).setView([40, -95], 4);
         } else{
-             var map = L.map('map', {scrollWheelZoom:false, center: [0, 0], zoom: 0, maxBounds: maxBounds, zoomSnap: 5}).fitBounds(maxBounds);
-        }
+             var map = L.map('map', {scrollWheelZoom:false}).setView([54, -125], 3);
+             var map = L.map('map', {scrollWheelZoom:false}).setView([40, -95], 3);
 
     //  add base map tiles from OpenStreetMap and attribution info to 'map' div
 
