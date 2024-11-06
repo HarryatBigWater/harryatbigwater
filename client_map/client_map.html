@@ -72,10 +72,15 @@ h1, h2, h3, h4, h5, h6 {
     <div id="map"></div>
 
 <script>
- var maxBounds = [
+ var maxBoundsTEST = [
     [25, -120], //Southwest
     [50, -60]  //Northeast
 ];
+
+ var maxBounds = L.latLngBounds(
+    L.latLng(5.499550, -167.276413), //Southwest
+    L.latLng(83.162102, -52.233040)  //Northeast
+);
  var token = 'pk.eyJ1Ijoic2Fta2d1ZXJyZXJvIiwiYSI6ImNpZ2xvejdxcTAyMTR1YWtyMm43YTNsc2QifQ.bwV2-5rCqbn5ITvF1F6AJw'
     //  create map object, tell it to live in 'map' div and give initial latitude, longitude, zoom values
 
