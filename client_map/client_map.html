@@ -83,14 +83,13 @@ h1, h2, h3, h4, h5, h6 {
 
     //  add base map tiles from OpenStreetMap and attribution info to 'map' div
 
-    // Create a custom icon class for the markers
-    var ProjectIcon = L.Icon.extend({
-        options: {
-            iconSize: [40, 40], // size of the icon
-            iconAnchor: [20, 40], // point of the icon which will correspond to marker's location
-            popupAnchor: [0, -40] // point from which the popup should open relative to the iconAnchor
-        }
-    });
+    // create custom icon
+    var marker = L.marker({
+        //iconUrl: './imgs/marker.png',
+        iconSize: [20, 30], // size of the icon
+        popupAnchor: [0,-15]
+        });
+
     // create popup contents
 
 
@@ -889,19 +888,19 @@ h1, h2, h3, h4, h5, h6 {
 // }).addTo(map);
 
 
-     // Create a custom icon class for the markers
-    var ProjectIcon = L.Icon.extend({
-        options: {
-            iconSize: [40, 40], // size of the icon
-            iconAnchor: [20, 40], // point of the icon which will correspond to marker's location
-            popupAnchor: [0, -40] // point from which the popup should open relative to the iconAnchor
-        }
-    });
+        L.geoJson(data, {
+          pointToLayer: function(feature, latlng) {
+            //console.log(latlng, feature);
+
+            return L.marker(latlng);
+          },
+          onEachFeature: onEachFeature
+        }).addTo(map);
+    })
+
 
 
 
 </script>
 
 </body>
-
-</html>
