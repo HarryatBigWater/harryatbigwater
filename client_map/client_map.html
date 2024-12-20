@@ -891,8 +891,21 @@ var customIcon = L.icon({
 
 L.geoJson(data, {
     pointToLayer: function(feature, latlng) {
-        // Use the custom icon for each marker
-        return L.marker(latlng, { icon: customIcon });
+        // Extract the image URL from the `cimage` property
+        var cimageUrl = feature.properties.cimage
+            ? feature.properties.cimage.match(/src="([^"]+)"/)[1] // Extract the URL from the <img> tag
+            : './imgs/default-marker.png'; // Fallback to a default marker if no cimage is provided
+
+        // Define a custom icon using the extracted URL
+        var dynamicIcon = L.icon({
+            iconUrl: cimageUrl, // Use the extracted URL
+            iconSize: [30, 40], // Adjust the size as needed
+            iconAnchor: [15, 40], // Anchor point of the icon
+            popupAnchor: [0, -40] // Popup position relative to the icon
+        });
+
+        // Return a marker with the dynamically created icon
+        return L.marker(latlng, { icon: dynamicIcon });
     },
     onEachFeature: function(feature, layer) {
         // Create custom popup content
