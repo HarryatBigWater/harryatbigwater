@@ -84,11 +84,12 @@ h1, h2, h3, h4, h5, h6 {
     //  add base map tiles from OpenStreetMap and attribution info to 'map' div
 
     // create custom icon
-    var marker = L.marker({
-        //iconUrl: './imgs/marker.png',
-        iconSize: [20, 30], // size of the icon
-        popupAnchor: [0,-15]
-        });
+var customIcon = L.icon({
+    iconUrl: './imgs/marker.png', // Replace this with the path to your custom image
+    iconSize: [30, 40], // Size of the icon
+    iconAnchor: [15, 40], // Anchor point of the icon
+    popupAnchor: [0, -40] // Point from which the popup opens relative to the icon anchor
+});
 
     // create popup contents
 
@@ -888,17 +889,21 @@ h1, h2, h3, h4, h5, h6 {
 // }).addTo(map);
 
 
-        L.geoJson(data, {
-          pointToLayer: function(feature, latlng) {
-            //console.log(latlng, feature);
-
-            return L.marker(latlng);
-          },
-          onEachFeature: onEachFeature
-        }).addTo(map);
-    })
-
-
+L.geoJson(data, {
+    pointToLayer: function(feature, latlng) {
+        // Use the custom icon for each marker
+        return L.marker(latlng, { icon: customIcon });
+    },
+    onEachFeature: function(feature, layer) {
+        // Create custom popup content
+        var customPopup = `
+            <h3>${feature.properties.name}</h3>
+            <p>${feature.properties.descriptio}</p>
+            ${feature.properties.cimage || ''}
+        `;
+        layer.bindPopup(customPopup); // Bind the popup to the marker
+    }
+}).addTo(map);
 
 
 </script>
