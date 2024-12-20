@@ -1,69 +1,45 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
-<meta charset="utf-8"/>
-<title>Big Water Consulting Client Map </title>
+    <meta charset="utf-8" />
+    <title>Big Water Consulting Client Map</title>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!--
- --><link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <!-- Mapbox GL -->
-<!--     <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
- -->
-<style>
-    body, #map {
+    <!-- Custom Styles -->
+    <style>
+        body, #map {
             margin: 0;
             position: relative;
         }
-    html, body, #map { height: 100% }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 400;
-    font-family: "Open Sans",sans-serif;
-    line-height: 1.2;
-}
+        html, body, #map {
+            height: 100%;
+        }
 
-.leaflet-zoom-anim  .leaflet-zoom-animated {
-  duration:2;
-}
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 400;
+            font-family: "Open Sans", sans-serif;
+            line-height: 1.2;
+        }
 
-.leaflet-popup-content {
-  text-align: center;
-  color: black;
-  font-weight: 300;
-/*  width: 205px;
-  font-size: 10px; */
-}
+        .leaflet-popup-content {
+            text-align: center;
+            color: black;
+            font-weight: 300;
+        }
 
-
-.leaflet-popup-tip-container{
-    display: none !important;
-}
-
-#popupimg {
-  color: black;
-}
-
-#popupimg img {
-  width: 100%;
-  height: 75%;
-}
-
-/* css to customize Leaflet default styles  */
-/*.custom .leaflet-popup-tip,
-.custom .leaflet-popup-content-wrapper {
-    background: #e93434;
-    color: #ffffff;
-}*/
-</style>
-
+        #popupimg img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -880,52 +856,45 @@ var customIcon = L.icon({
 
 
 
-    $(document).ready(function() {
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {attribution: 'Map tiles by <a href="https://carto.com">Carto</a> | Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a> | Prepared by <a href="http://www.bigwaterconsulting.net">Big Water Consulting</a>'}).addTo(map);
+ // Add GeoJSON data to the map
+            L.geoJson(data, {
+                pointToLayer: function (feature, latlng) {
+                    // Extract the image URL from the `cimage` property
+                    var cimageHtml = feature.properties.cimage || '';
+                    var cimageUrl = './imgs/default-marker.png'; // Default marker in case no valid image is found
 
-//         var gl = L.mapboxGL({
-//     accessToken: 'no-token',
-//     style: 'https://raw.githubusercontent.com/osm2vectortiles/mapbox-gl-styles/master/styles/bright-v9-cdn.json'
-// }).addTo(map);
+                    // Attempt to extract the `src` attribute from the <img> tag
+                    if (cimageHtml.includes('<img')) {
+                        var match = cimageHtml.match(/<img.*?src=["'](.*?)["']/);
+                        if (match && match[1]) {
+                            cimageUrl = match[1];
+                        }
+                    }
 
+                    // Define a custom icon using the extracted URL
+                    var dynamicIcon = L.icon({
+                        iconUrl: cimageUrl,
+                        iconSize: [30, 40],
+                        iconAnchor: [15, 40],
+                        popupAnchor: [0, -40],
+                    });
 
-L.geoJson(data, {
-    pointToLayer: function(feature, latlng) {
-        // Extract the image URL from the `cimage` property
-        var cimageHtml = feature.properties.cimage; // The full HTML string
-        var cimageUrl = './imgs/default-marker.png'; // Default marker in case of no valid image
-
-        // Attempt to extract the `src` attribute from the <img> tag
-        if (cimageHtml && cimageHtml.includes('<img')) {
-            var match = cimageHtml.match(/<img.*?src=["'](.*?)["']/);
-            if (match && match[1]) {
-                cimageUrl = match[1]; // Extracted image URL
-            }
-        }
-
-        // Define a custom icon using the extracted URL
-        var dynamicIcon = L.icon({
-            iconUrl: cimageUrl, // Use the extracted URL
-            iconSize: [30, 40], // Adjust the size as needed
-            iconAnchor: [15, 40], // Anchor point of the icon
-            popupAnchor: [0, -40] // Popup position relative to the icon
+                    // Return a marker with the dynamically created icon
+                    return L.marker(latlng, { icon: dynamicIcon });
+                },
+                onEachFeature: function (feature, layer) {
+                    // Create custom popup content
+                    var customPopup = `
+                        <h3>${feature.properties.name}</h3>
+                        <p>${feature.properties.descriptio}</p>
+                        ${feature.properties.cimage || ''}
+                    `;
+                    layer.bindPopup(customPopup); // Bind the popup to the marker
+                }
+            }).addTo(map);
         });
-
-        // Return a marker with the dynamically created icon
-        return L.marker(latlng, { icon: dynamicIcon });
-    },
-    onEachFeature: function(feature, layer) {
-        // Create custom popup content
-        var customPopup = `
-            <h3>${feature.properties.name}</h3>
-            <p>${feature.properties.descriptio}</p>
-            ${feature.properties.cimage || ''}
-        `;
-        layer.bindPopup(customPopup); // Bind the popup to the marker
-    }
-}).addTo(map);
-
-
-</script>
-
+    </script>
 </body>
+
+</html>
+
