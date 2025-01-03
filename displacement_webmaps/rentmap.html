@@ -44,19 +44,20 @@
 <body>
 <div id="map"></div>
 <script>
-    // Initialize Map with fitBounds for contiguous US
-    var map = L.map('map');
+    // Initialize Map with adjusted fitBounds for contiguous US
+    var map = L.map('map', {
+        maxZoom: 10,
+        minZoom: 3
+    });
 
-    // Define bounding box for the contiguous United States
+    // Define bounding box for the contiguous United States with added buffer
     var usBounds = [
-        [24.396308, -125.000000], // Southwest corner (Latitude, Longitude)
-        [49.384358, -66.934570]   // Northeast corner (Latitude, Longitude)
+        [23.5, -126.0], // Southwest corner (Latitude, Longitude)
+        [50.0, -65.0]   // Northeast corner (Latitude, Longitude)
     ];
 
     // Fit the map to these bounds
-    map.fitBounds(usBounds, {
-        maxZoom: 6
-    });
+    map.fitBounds(usBounds);
 
     // Add Base Map Layer
     var tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -160,3 +161,4 @@
 </script>
 </body>
 </html>
+
