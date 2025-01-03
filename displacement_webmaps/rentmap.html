@@ -77,9 +77,10 @@
     info.update = function (props) {
         this._div.innerHTML = '<h4>HUD Estimated Median Monthly Rent Changes<br>2015 to 2025</h4>' + (props ?
             '<b>' + props.areaname18 + '</b><br />' +
-            'Rent, 2015: $' + numberWithCommas(props.b1_i) + '<br />' +
+            'Rent, 2015*: $' + numberWithCommas(props.b1_i) + '<br />' +
             'Rent, 2025: $' + numberWithCommas(props.re_1) + '<br />' +
-            'Rent Increase: $' + numberWithCommas(props.re_1 - props.b1_i)
+            'Rent Increase: $' + numberWithCommas(props.re_1 - props.b1_i) + '<br />' +
+             'Adjusted for inflation to 2025 prices'                                                                                  
             : 'Hover over a region');
     };
     info.addTo(map);
