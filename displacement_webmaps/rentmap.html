@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 <head>
     <title>HUD Estimated Rent Changes 2015 - 2025</title>
@@ -6,13 +6,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <script type="text/javascript" src="rent_updated.js"></script>
+    <script type="text/javascript" src="rent_updated.js?cache=5"></script> <!-- Added dynamic cache -->
     <style>
         body, html, #map {
             height: 100%;
             margin: 0;
             font-family: 'Open Sans', sans-serif;
         }
+
         .info {
             padding: 6px 8px;
             background: rgba(255, 255, 255, 0.9);
@@ -20,53 +21,65 @@
             border-radius: 5px;
             color: #6b8cb9;
         }
+
         .info h4 {
             margin: 0 0 5px;
             text-align: center;
             color: #0b3e6b;
         }
+
         .legend {
             line-height: 18px;
             color: #6b8cb9;
             background: rgba(255, 255, 255, 0.9);
             padding: 6px 8px;
             border-radius: 5px;
+            position: absolute;
+            bottom: 30px;
+            right: 10px;
+            z-index: 1000;
         }
-        .legend i {
-            width: 18px;
-            height: 18px;
-            float: left;
-            margin-right: 8px;
-        }
+
         .filter {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 6px;
+            bottom: 90px; /* Adjusted to position above legend */
+            right: 10px;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 6px 8px;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
         }
+
+        .filter label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+
         .filter select {
             width: 150px;
-            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
 <div id="map"></div>
+
+<!-- Bedroom Filter Dropdown -->
 <div class="filter">
-    <label for="bedroomFilter">Select Bedroom Type:</label>
+    <label for="bedroomFilter">Select Bedroom:</label>
     <select id="bedroomFilter">
         <option value="studio">Studio</option>
-        <option value="one_br" selected>One Bedroom</option>
-        <option value="two_br">Two Bedrooms</option>
-        <option value="three_br">Three Bedrooms</option>
-        <option value="four_br">Four Bedrooms</option>
+        <option value="one_br" selected>1-Bedroom</option>
+        <option value="two_br">2-Bedroom</option>
+        <option value="three_br">3-Bedroom</option>
+        <option value="four_br">4-Bedroom</option>
     </select>
 </div>
+
 <script>
     // Initialize Map with adjusted fitBounds for contiguous US
     var map = L.map('map', {
@@ -74,35 +87,33 @@
         minZoom: 4
     });
 
-    // Define refined bounding box for contiguous US
     var usBounds = [
-        [28.0, -124.0], // Southwest corner
-        [47.0, -66.0]   // Northeast corner
+        [28.0, -124.0], // Southwest corner (Latitude, Longitude)
+        [47.0, -66.0]   // Northeast corner (Latitude, Longitude)
     ];
     map.fitBounds(usBounds);
 
-    // Add Base Map Layer
-    var tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // Base Layer
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: 'Map tiles by <a href="https://carto.com">Carto</a>, Data by <a href="http://openstreetmap.org">OSM</a>',
         subdomains: 'abcd',
         maxZoom: 15
     }).addTo(map);
 
-    // Info Box Control
+    // Info Box
     var info = L.control();
     info.onAdd = function () {
         this._div = L.DomUtil.create('div', 'info');
         this.update();
         return this._div;
     };
-
     info.update = function (props) {
         this._div.innerHTML = '<h4>HUD Estimated Median Monthly Rent Changes<br>2015 to 2025</h4>' + (props ?
             '<b>' + props.areaname18 + '</b><br />' +
-            'Rent, 2015*: $' + numberWithCommas(props.b1_i) + '<br />' +
+            'Rent, 2015: $' + numberWithCommas(props.b1_i) + '<br />' +
             'Rent, 2025: $' + numberWithCommas(props.re_1) + '<br />' +
-            'Rent Increase: $' + numberWithCommas(props.re_1 - props.b1_i) + '<br />' +
-            '<small>*Adjusted for inflation to 2025 prices.</small>'
+            'Rent Increase: $' + numberWithCommas(props.re_1 - props.b1_i) +
+            '<br><small>*Adjusted for inflation to 2025 prices.</small>'
             : 'Hover over a region');
     };
     info.addTo(map);
@@ -116,15 +127,13 @@
 
         div.innerHTML = '<h4>Rent Changes</h4>';
         for (var i = 0; i < grades.length; i++) {
-            div.innerHTML +=
-                '<i style="background:' + getColor(grades[i]) + '"></i> ' +
-                labels[i] + '<br>';
+            div.innerHTML += '<i style="background:' + getColor(grades[i]) + '"></i> ' + labels[i] + '<br>';
         }
         return div;
     };
     legend.addTo(map);
 
-    // Color function
+    // Color Function
     function getColor(d) {
         return d > 300 ? '#d73027' :
                d > 150 ? '#fc8d59' :
@@ -134,28 +143,53 @@
                d > -300 ? '#91cf60' : '#1a9850';
     }
 
+    // Highlight and Reset Feature
+    function highlightFeature(e) {
+        var layer = e.target;
+        layer.setStyle({
+            weight: 2,
+            color: '#555',
+            fillOpacity: 0.7
+        });
+        layer.bringToFront();
+        info.update(layer.feature.properties);
+    }
+
+    function resetHighlight(e) {
+        geojson.resetStyle(e.target);
+        info.update();
+    }
+
+    function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+    }
+
+    // Update Style Based on Filter
+    function updateMapStyle() {
+        geojson.setStyle(function (feature) {
+            const variable = getSelectedVariable();
+            return {
+                fillColor: getColor(feature.properties[variable]),
+                weight: 1,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        });
+    }
+
     function getSelectedVariable() {
-        const selected = document.getElementById('bedroomFilter').value;
+        const selected = $('#bedroomFilter').val();
         return selected === 'studio' ? 'b0_i' :
                selected === 'one_br' ? 'b1_i' :
                selected === 'two_br' ? 'b2_i' :
                selected === 'three_br' ? 'b3_i' : 'b4_i';
     }
 
-    function style(feature) {
-        const variable = getSelectedVariable();
-        return {
-            fillColor: getColor(feature.properties.re_1 - feature.properties[variable]),
-            weight: 1,
-            opacity: 1,
-            color: 'white',
-            dashArray: '3',
-            fillOpacity: 0.7
-        };
-    }
+    $('#bedroomFilter').on('change', updateMapStyle);
 
     var geojson = L.geoJson(rentData, {
-        style: style,
         onEachFeature: function (feature, layer) {
             layer.on({
                 mouseover: highlightFeature,
@@ -165,28 +199,8 @@
         }
     }).addTo(map);
 
-    $('#bedroomFilter').on('change', function() {
-        geojson.setStyle(style);
-    });
-
-    function highlightFeature(e) {
-        var layer = e.target;
-        layer.setStyle({
-            weight: 2,
-            color: '#555',
-            fillOpacity: 0.7
-        });
-        info.update(layer.feature.properties);
-    }
-
-    function resetHighlight(e) {
-        geojson.resetStyle(e.target);
-        info.update();
-    }
-
-    function numberWithCommas(number) {
-        return parseFloat(number).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    }
+    updateMapStyle();
 </script>
 </body>
 </html>
+
