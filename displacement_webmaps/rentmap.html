@@ -126,7 +126,7 @@
         info.update = function (props) {   //Updates info box when hovering over based on which variable is selected
             switch (mod){
             case 'studio':
-                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2015 to 2025</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>Studio rent, 2015*:</td> <td>$' + numberWithCommas(Math.round(props.b0_i)) +'</td>'
                     +'<tr><td>Studio rent, 2025:</td> <td>$' + numberWithCommas((props.rent)) +'</td>'
@@ -135,7 +135,7 @@
                     : 'Hover over or click on a region');
             break;
             case 'one_br':
-                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2015 to 2025</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>One bedroom rent, 2015*:</td> <td>$' + numberWithCommas(Math.round(props.b1_i)) +'</td>'
                     +'<tr><td>One bedroom rent, 2025:</td> <td>$' + numberWithCommas((props.re_1)) +'</td>'
@@ -144,7 +144,7 @@
                     : 'Hover over or click on a region');
             break;
             case 'two_br':
-                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+                this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2015 to 2025</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>Two bedroom rent, 2015*:</td> <td>$' + numberWithCommas(Math.round(props.b2_i)) +'</td>'
                     +'<tr><td>Two bedroom rent, 2025:</td> <td>$' + numberWithCommas((props.re_2)) +'</td>'
@@ -153,7 +153,7 @@
                     : 'Hover over or click on a region');
             break;
             case 'three_br':
-               this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+               this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2015 to 2025</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>Three bedroom rent, 2015*:</td> <td>$' + numberWithCommas(Math.round(props.b3_i)) +'</td>'
                     +'<tr><td>Three bedroom rent, 2025:</td> <td>$' + numberWithCommas((props.re_3)) +'</td>'
@@ -162,7 +162,7 @@
                     : 'Hover over or click on a region');
             break;
             case 'four_br':
-               this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2008 to 2018</h4>' +  (props ?
+               this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2015 to 2025</h4>' +  (props ?
                     '<h4 style="text-align: center;">' + props.areaname18 + '</h4>' 
                     +'<table> <tr><td>Four bedroom rent, 2015*:</td> <td>$' + numberWithCommas(Math.round(props.b4_i)) +'</td>'
                     +'<tr><td>Four bedroom rent, 2025:</td> <td>$' + numberWithCommas((props.re_4)) +'</td>'
