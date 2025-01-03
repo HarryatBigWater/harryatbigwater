@@ -6,14 +6,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <script type="text/javascript" src="rent_updated.js?cache=5"></script> <!-- Added dynamic cache -->
+    <script type="text/javascript" src="rent_updated.js"></script>
     <style>
         body, html, #map {
             height: 100%;
             margin: 0;
             font-family: 'Open Sans', sans-serif;
         }
-
         .info {
             padding: 6px 8px;
             background: rgba(255, 255, 255, 0.9);
@@ -21,99 +20,96 @@
             border-radius: 5px;
             color: #6b8cb9;
         }
-
         .info h4 {
             margin: 0 0 5px;
             text-align: center;
             color: #0b3e6b;
         }
-
         .legend {
             line-height: 18px;
             color: #6b8cb9;
             background: rgba(255, 255, 255, 0.9);
             padding: 6px 8px;
             border-radius: 5px;
+            margin-bottom: 60px; /* Added space for dropdown */
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+        }
+        .dropDown {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             right: 10px;
             z-index: 1000;
-        }
-
-        .filter {
-            position: absolute;
-            bottom: 90px; /* Adjusted to position above legend */
-            right: 10px;
-            z-index: 1001;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.9);
             padding: 6px 8px;
-            border-radius: 5px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        }
-
-        .filter label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .filter select {
-            width: 150px;
-            font-size: 14px;
+            border-radius: 5px;
             text-align: center;
+        }
+        .dropDown h4 {
+            margin: 0 0 5px;
+            color: #0b3e6b;
+        }
+        .dropDown select {
+            width: 150px;
+            font-family: 'Open Sans', sans-serif;
+            color: #6b8cb9;
         }
     </style>
 </head>
 
 <body>
 <div id="map"></div>
-
-<!-- Bedroom Filter Dropdown -->
-<div class="filter">
-    <label for="bedroomFilter">Select Bedroom:</label>
-    <select id="bedroomFilter">
+<div class="dropDown">
+    <h4>Select Number of Bedrooms</h4>
+    <select onchange="getval(this.value, event);" onclick="disProp(event);" onfocus="disProp(event);">
         <option value="studio">Studio</option>
-        <option value="one_br" selected>1-Bedroom</option>
-        <option value="two_br">2-Bedroom</option>
-        <option value="three_br">3-Bedroom</option>
-        <option value="four_br">4-Bedroom</option>
+        <option value="one_br" selected>One Bedroom</option>
+        <option value="two_br">Two Bedrooms</option>
+        <option value="three_br">Three Bedrooms</option>
+        <option value="four_br">Four Bedrooms</option>
     </select>
 </div>
 
 <script>
-    // Initialize Map with adjusted fitBounds for contiguous US
+    // Initialize Map
     var map = L.map('map', {
         maxZoom: 10,
         minZoom: 4
-    });
-
-    var usBounds = [
+    }).fitBounds([
         [28.0, -124.0], // Southwest corner (Latitude, Longitude)
         [47.0, -66.0]   // Northeast corner (Latitude, Longitude)
-    ];
-    map.fitBounds(usBounds);
+    ]);
 
-    // Base Layer
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // Add Base Map Layer
+    var tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: 'Map tiles by <a href="https://carto.com">Carto</a>, Data by <a href="http://openstreetmap.org">OSM</a>',
         subdomains: 'abcd',
         maxZoom: 15
     }).addTo(map);
 
-    // Info Box
+    // Info Box Control
     var info = L.control();
+    var mod = "one_br";
+
     info.onAdd = function () {
         this._div = L.DomUtil.create('div', 'info');
         this.update();
         return this._div;
     };
+
     info.update = function (props) {
+        var inflationYear = mod === 'studio' ? '2025' : '2025';
         this._div.innerHTML = '<h4>HUD Estimated Median Monthly Rent Changes<br>2015 to 2025</h4>' + (props ?
             '<b>' + props.areaname18 + '</b><br />' +
             'Rent, 2015: $' + numberWithCommas(props.b1_i) + '<br />' +
             'Rent, 2025: $' + numberWithCommas(props.re_1) + '<br />' +
-            'Rent Increase: $' + numberWithCommas(props.re_1 - props.b1_i) +
-            '<br><small>*Adjusted for inflation to 2025 prices.</small>'
+            'Rent Increase: $' + numberWithCommas(props.re_1 - props.b1_i) + '<br />' +
+            `<small>*Adjusted for inflation to ${inflationYear} prices.</small>`
             : 'Hover over a region');
     };
     info.addTo(map);
@@ -127,13 +123,15 @@
 
         div.innerHTML = '<h4>Rent Changes</h4>';
         for (var i = 0; i < grades.length; i++) {
-            div.innerHTML += '<i style="background:' + getColor(grades[i]) + '"></i> ' + labels[i] + '<br>';
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i]) + '"></i> ' +
+                labels[i] + '<br>';
         }
         return div;
     };
     legend.addTo(map);
 
-    // Color Function
+    // Color function
     function getColor(d) {
         return d > 300 ? '#d73027' :
                d > 150 ? '#fc8d59' :
@@ -143,7 +141,6 @@
                d > -300 ? '#91cf60' : '#1a9850';
     }
 
-    // Highlight and Reset Feature
     function highlightFeature(e) {
         var layer = e.target;
         layer.setStyle({
@@ -164,32 +161,17 @@
         map.fitBounds(e.target.getBounds());
     }
 
-    // Update Style Based on Filter
-    function updateMapStyle() {
-        geojson.setStyle(function (feature) {
-            const variable = getSelectedVariable();
+    var geojson = L.geoJson(rentData, {
+        style: function (feature) {
             return {
-                fillColor: getColor(feature.properties[variable]),
+                fillColor: getColor(feature.properties.re_1 - feature.properties.b1_i),
                 weight: 1,
                 opacity: 1,
                 color: 'white',
                 dashArray: '3',
                 fillOpacity: 0.7
             };
-        });
-    }
-
-    function getSelectedVariable() {
-        const selected = $('#bedroomFilter').val();
-        return selected === 'studio' ? 'b0_i' :
-               selected === 'one_br' ? 'b1_i' :
-               selected === 'two_br' ? 'b2_i' :
-               selected === 'three_br' ? 'b3_i' : 'b4_i';
-    }
-
-    $('#bedroomFilter').on('change', updateMapStyle);
-
-    var geojson = L.geoJson(rentData, {
+        },
         onEachFeature: function (feature, layer) {
             layer.on({
                 mouseover: highlightFeature,
@@ -199,7 +181,9 @@
         }
     }).addTo(map);
 
-    updateMapStyle();
+    function numberWithCommas(number) {
+        return parseFloat(number).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
 </script>
 </body>
 </html>
