@@ -47,13 +47,13 @@
     // Initialize Map with adjusted fitBounds for contiguous US
     var map = L.map('map', {
         maxZoom: 10,
-        minZoom: 3
+        minZoom: 4
     });
 
-    // Define bounding box for the contiguous United States with added buffer
+    // Define refined bounding box for contiguous US
     var usBounds = [
-        [23.5, -126.0], // Southwest corner (Latitude, Longitude)
-        [50.0, -65.0]   // Northeast corner (Latitude, Longitude)
+        [25.0, -125.0], // Southwest corner (Latitude, Longitude)
+        [49.0, -66.0]   // Northeast corner (Latitude, Longitude)
     ];
 
     // Fit the map to these bounds
@@ -161,4 +161,5 @@
 </script>
 </body>
 </html>
+
 
