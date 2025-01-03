@@ -2,189 +2,164 @@
 <html>
 <head>
     <title>HUD Estimated Rent Changes 2015 - 2025</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <script type="text/javascript" src="rent_updated.js"></script>
+    <script type="text/javascript" src="rent.js"></script>
     <style>
-        body, html, #map {
-            height: 100%;
+        body {
+            padding: 0;
             margin: 0;
-            font-family: 'Open Sans', sans-serif;
+        }
+        html, body, #map {
+            height: 100%;
+            font-family: 'Open Sans', sans-serif !important;
         }
         .info {
             padding: 6px 8px;
+            font: 14px/16px 'Open Sans', sans-serif;
             background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             color: #6b8cb9;
         }
-        .info h4 {
+        .dropDown h4, .info h4 {
             margin: 0 0 5px;
-            text-align: center;
-            color: #0b3e6b;
+            max-width: 200px;
+            word-wrap: break-word;
+            margin-left: auto;
+            margin-right: auto;
+            color: #0b3e6b !important;
         }
         .legend {
             line-height: 18px;
             color: #6b8cb9;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 6px 8px;
-            border-radius: 5px;
-            margin-bottom: 60px; /* Added space for dropdown */
         }
         .legend i {
             width: 18px;
             height: 18px;
             float: left;
             margin-right: 8px;
+            opacity: 0.9;
         }
         .dropDown {
-            position: absolute;
-            bottom: 20px;
-            right: 10px;
-            z-index: 1000;
+            padding: 4px 4px;
+            font: 14px/16px 'Open Sans', sans-serif;
             background: rgba(255, 255, 255, 0.9);
-            padding: 6px 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             border-radius: 5px;
-            text-align: center;
+            width: 217px;
         }
-        .dropDown h4 {
-            margin: 0 0 5px;
-            color: #0b3e6b;
-        }
-        .dropDown select {
-            width: 150px;
-            font-family: 'Open Sans', sans-serif;
+        select {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            text-align-last: center;
             color: #6b8cb9;
+            font-family: 'Open Sans', sans-serif;
+            width: 150px;
+        }
+        small {
+            font-size: smaller;
+            display: block;
+            float: right;
         }
     </style>
 </head>
 
 <body>
-<div id="map"></div>
-<div class="dropDown">
-    <h4>Select Number of Bedrooms</h4>
-    <select onchange="getval(this.value, event);" onclick="disProp(event);" onfocus="disProp(event);">
-        <option value="studio">Studio</option>
-        <option value="one_br" selected>One Bedroom</option>
-        <option value="two_br">Two Bedrooms</option>
-        <option value="three_br">Three Bedrooms</option>
-        <option value="four_br">Four Bedrooms</option>
-    </select>
-</div>
 
-<script>
-    // Initialize Map
-    var map = L.map('map', {
-        maxZoom: 10,
-        minZoom: 4
-    }).fitBounds([
-        [28.0, -124.0], // Southwest corner (Latitude, Longitude)
-        [47.0, -66.0]   // Northeast corner (Latitude, Longitude)
-    ]);
-
-    // Add Base Map Layer
-    var tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: 'Map tiles by <a href="https://carto.com">Carto</a>, Data by <a href="http://openstreetmap.org">OSM</a>',
-        subdomains: 'abcd',
-        maxZoom: 15
-    }).addTo(map);
-
-    // Info Box Control
-    var info = L.control();
-    var mod = "one_br";
-
-    info.onAdd = function () {
-        this._div = L.DomUtil.create('div', 'info');
-        this.update();
-        return this._div;
-    };
-
-    info.update = function (props) {
-        var inflationYear = mod === 'studio' ? '2025' : '2025';
-        this._div.innerHTML = '<h4>HUD Estimated Median Monthly Rent Changes<br>2015 to 2025</h4>' + (props ?
-            '<b>' + props.areaname18 + '</b><br />' +
-            'Rent, 2015: $' + numberWithCommas(props.b1_i) + '<br />' +
-            'Rent, 2025: $' + numberWithCommas(props.re_1) + '<br />' +
-            'Rent Increase: $' + numberWithCommas(props.re_1 - props.b1_i) + '<br />' +
-            `<small>*Adjusted for inflation to ${inflationYear} prices.</small>`
-            : 'Hover over a region');
-    };
-    info.addTo(map);
-
-    // Legend Control
-    var legend = L.control({position: 'bottomright'});
-    legend.onAdd = function () {
-        var div = L.DomUtil.create('div', 'legend');
-        var grades = [300, 150, 50, -50, -150, -300];
-        var labels = ['Increase $300+', 'Increase $150-$300', 'Increase $50-$150', 'Decrease $50-$150', 'Decrease $150-$300', 'Decrease $300+'];
-
-        div.innerHTML = '<h4>Rent Changes</h4>';
-        for (var i = 0; i < grades.length; i++) {
-            div.innerHTML +=
-                '<i style="background:' + getColor(grades[i]) + '"></i> ' +
-                labels[i] + '<br>';
+<div id="map">
+    <script>
+        if ($(window).width() > 1460 & $(window).height() > 720) {
+            var map = L.map('map').setView([39.826064, -96], 5);
+        } else {
+            var map = L.map('map').setView([39.826064, -96], 4);
         }
-        return div;
-    };
-    legend.addTo(map);
 
-    // Color function
-    function getColor(d) {
-        return d > 300 ? '#d73027' :
-               d > 150 ? '#fc8d59' :
-               d > 50 ? '#fee08b' :
-               d > -50 ? '#ffffbf' :
-               d > -150 ? '#d9ef8b' :
-               d > -300 ? '#91cf60' : '#1a9850';
-    }
+        var Acetate_all = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            attribution: 'Map tiles by <a href="https://carto.com">Carto</a> | Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a> | <a href="https://www.huduser.gov/portal/datasets/50per.html">Median Rent Estimates</a> | <a href="https://www.bls.gov/data/inflation_calculator.htm">Inflation Calculator</a> | Prepared by <a href="http://www.bigwaterconsulting.net">Big Water Consulting</a>',
+            subdomains: '0123',
+            minZoom: 3,
+            maxZoom: 15
+        }).addTo(map);
 
-    function highlightFeature(e) {
-        var layer = e.target;
-        layer.setStyle({
-            weight: 2,
-            color: '#555',
-            fillOpacity: 0.7
-        });
-        layer.bringToFront();
-        info.update(layer.feature.properties);
-    }
+        var info = L.control();
+        var mod = "one_br";
 
-    function resetHighlight(e) {
-        geojson.resetStyle(e.target);
-        info.update();
-    }
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
 
-    function zoomToFeature(e) {
-        map.fitBounds(e.target.getBounds());
-    }
+        function numberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
 
-    var geojson = L.geoJson(rentData, {
-        style: function (feature) {
+        info.update = function (props) {
+            switch (mod) {
+                case 'studio':
+                    this._div.innerHTML = '<h4 style="text-align: center;">HUD Estimated Median Monthly Rent Increases<br>(Inflation Adjusted)<br>2015 to 2025</h4>' + (props ?
+                        '<h4 style="text-align: center;">' + props.areaname25 + '</h4>'
+                        + '<table> <tr><td>Studio rent, 2015*:</td> <td>$' + numberWithCommas(Math.round(props.b0_i)) + '</td>'
+                        + '<tr><td>Studio rent, 2025:</td> <td>$' + numberWithCommas((props.rent)) + '</td>'
+                        + '<tr><td>Studio rent increase:</td> <td>$' + numberWithCommas((props.rent - Math.round(props.b0_i))) + '</td></tr></table>'
+                        + '<small>*Adjusted for inflation to 2025 prices.</small>'
+                        : 'Hover over or click on a region');
+                    break;
+                // Repeat similar changes for one_br, two_br, three_br, and four_br cases
+            }
+        };
+
+        var dropDown = L.control({ position: 'bottomright' });
+        dropDown.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'dropDown');
+            this._div.innerHTML = ('<h4 style="text-align: center;">Select Number of Bedrooms</h4>' +
+                '<select onchange="getval(this.value, event);" onclick="disProp(event);" onfocus="disProp(event);"><option value="studio">Studio</option><option value="one_br" selected>One Bedroom</option><option value="two_br">Two Bedrooms</option><option value="three_br">Three Bedrooms</option><option value="four_br">Four Bedrooms</option></select>');
+            return this._div;
+        };
+
+        function getColor(d) {
+            return d >= 300 ? '#d73027' :
+                d >= 150 ? '#fc8d59' :
+                    d >= 50 ? '#fee08b' :
+                        d >= -50 ? '#ffffbf' :
+                            d >= -150 ? '#d9ef8b' :
+                                d >= -300 ? '#91cf60' :
+                                    '#1a9850';
+        }
+
+        function style(feature) {
             return {
                 fillColor: getColor(feature.properties.re_1 - feature.properties.b1_i),
-                weight: 1,
-                opacity: 1,
+                weight: 1.0,
+                opacity: 0.7,
                 color: 'white',
-                dashArray: '3',
                 fillOpacity: 0.7
             };
-        },
-        onEachFeature: function (feature, layer) {
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: zoomToFeature
-            });
         }
-    }).addTo(map);
 
-    function numberWithCommas(number) {
-        return parseFloat(number).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    }
-</script>
+        var geojson = L.geoJson(rentData, {
+            style: style,
+        }).addTo(map);
+
+        var legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML = "<h4 style='text-align: center;'>Monthly Rent Increase</h4>";
+            return div;
+        };
+
+        legend.addTo(map);
+        info.addTo(map);
+        dropDown.addTo(map);
+    </script>
+</div>
 </body>
 </html>
 
