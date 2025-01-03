@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
     <title>HUD Estimated Rent Changes 2015 - 2025</title>
@@ -38,11 +38,35 @@
             float: left;
             margin-right: 8px;
         }
+        .filter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .filter select {
+            width: 150px;
+            font-family: 'Open Sans', sans-serif;
+        }
     </style>
 </head>
 
 <body>
 <div id="map"></div>
+<div class="filter">
+    <label for="bedroomFilter">Select Bedroom Type:</label>
+    <select id="bedroomFilter">
+        <option value="studio">Studio</option>
+        <option value="one_br" selected>One Bedroom</option>
+        <option value="two_br">Two Bedrooms</option>
+        <option value="three_br">Three Bedrooms</option>
+        <option value="four_br">Four Bedrooms</option>
+    </select>
+</div>
 <script>
     // Initialize Map with adjusted fitBounds for contiguous US
     var map = L.map('map', {
@@ -52,11 +76,9 @@
 
     // Define refined bounding box for contiguous US
     var usBounds = [
-        [28.0, -124.0], // Southwest corner (Latitude, Longitude)
-        [47.0, -66.0]   // Northeast corner (Latitude, Longitude)
+        [28.0, -124.0], // Southwest corner
+        [47.0, -66.0]   // Northeast corner
     ];
-
-    // Fit the map to these bounds
     map.fitBounds(usBounds);
 
     // Add Base Map Layer
@@ -80,7 +102,7 @@
             'Rent, 2015*: $' + numberWithCommas(props.b1_i) + '<br />' +
             'Rent, 2025: $' + numberWithCommas(props.re_1) + '<br />' +
             'Rent Increase: $' + numberWithCommas(props.re_1 - props.b1_i) + '<br />' +
-             'Adjusted for inflation to 2025 prices'                                                                                  
+            '<small>*Adjusted for inflation to 2025 prices.</small>'
             : 'Hover over a region');
     };
     info.addTo(map);
@@ -112,40 +134,28 @@
                d > -300 ? '#91cf60' : '#1a9850';
     }
 
-    // Highlight feature
-    function highlightFeature(e) {
-        var layer = e.target;
-        layer.setStyle({
-            weight: 2,
-            color: '#555',
-            dashArray: '',
+    function getSelectedVariable() {
+        const selected = document.getElementById('bedroomFilter').value;
+        return selected === 'studio' ? 'b0_i' :
+               selected === 'one_br' ? 'b1_i' :
+               selected === 'two_br' ? 'b2_i' :
+               selected === 'three_br' ? 'b3_i' : 'b4_i';
+    }
+
+    function style(feature) {
+        const variable = getSelectedVariable();
+        return {
+            fillColor: getColor(feature.properties.re_1 - feature.properties[variable]),
+            weight: 1,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
             fillOpacity: 0.7
-        });
-        layer.bringToFront();
-        info.update(layer.feature.properties);
+        };
     }
 
-    function resetHighlight(e) {
-        geojson.resetStyle(e.target);
-        info.update();
-    }
-
-    function zoomToFeature(e) {
-        map.fitBounds(e.target.getBounds());
-    }
-
-    // Load GeoJSON
     var geojson = L.geoJson(rentData, {
-        style: function (feature) {
-            return {
-                fillColor: getColor(feature.properties.re_1 - feature.properties.b1_i),
-                weight: 1,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            };
-        },
+        style: style,
         onEachFeature: function (feature, layer) {
             layer.on({
                 mouseover: highlightFeature,
@@ -155,12 +165,28 @@
         }
     }).addTo(map);
 
-    // Helper Function
+    $('#bedroomFilter').on('change', function() {
+        geojson.setStyle(style);
+    });
+
+    function highlightFeature(e) {
+        var layer = e.target;
+        layer.setStyle({
+            weight: 2,
+            color: '#555',
+            fillOpacity: 0.7
+        });
+        info.update(layer.feature.properties);
+    }
+
+    function resetHighlight(e) {
+        geojson.resetStyle(e.target);
+        info.update();
+    }
+
     function numberWithCommas(number) {
         return parseFloat(number).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
 </script>
 </body>
 </html>
-
-
