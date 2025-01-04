@@ -1,73 +1,35 @@
-<!doctype html>
+!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juxtapose Map Comparison</title>
     <style>
-        /* General Page Styling */
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f9fafc;
-        }
+    .jx-knightlab{
+        visibility: hidden;
+    }
+    .juxtapose-name{
+        visibility: hidden;
+    }
+    .jx-handle{
+        color:#486382;
+    }
 
-        /* Juxtapose Container Styling */
-        #juxtapose-wrapper {
-            width: 800px;
-            height: 600px;
-            max-width: 90vw;
-            max-height: 80vh;
-            border: 1px solid #ccc;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        /* Juxtapose Custom Styles */
-        .jx-handle {
-            color: #2a4d69;
-        }
-
-        .jx-controller {
-            border-radius: 4px;
-        }
-
-        .jx-image .jx-label {
-            font-size: 1em !important;
-            background: rgba(42, 77, 105, 0.8);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            #juxtapose-wrapper {
-                width: 95vw;
-                height: 50vh;
-            }
-        }
+    .jx-controller{
+        border-radius: 3px;
+    }
+    .jx-image .jx-label{
+        font-size: 1.5em !important;
+    }
     </style>
-    <script src="https://cdn.knightlab.com/libs/juxtapose/latest/js/juxtapose.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/juxtapose/latest/css/juxtapose.css">
 </head>
-<body>
 
-<!-- Juxtapose Map -->
-<div id="juxtapose-wrapper" class="juxtapose"
-     data-showlabels="true"
-     data-animate="true"
-     data-mode="horizontal"
-     style="width: 100%; height: 100%;">
-    <img src="pct_edu_2016.png" data-label="2016 Education Levels"/>
-    <img src="pct_edu_2000.png" data-label="2000 Education Levels"/>
+<div id="juxtapose-wrapper" class="juxtapose" data-showlabels="true"data-animate="true" data-mode="vertical" style="height: 600px; width: 600px;">
+    <img src="pct_edu_2016.png" data-label="2016"/>
+    <img src="pct_edu_2000.png" data-label="2000"/>
+
 </div>
+<script src="https://cdn.knightlab.com/libs/juxtapose/latest/js/juxtapose.min.js"></script>
+<link rel="stylesheet" href="https://cdn.knightlab.com/libs/juxtapose/latest/css/juxtapose.css">
 
-</body>
+
 </html>
 
