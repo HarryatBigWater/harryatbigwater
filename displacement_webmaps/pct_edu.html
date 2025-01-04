@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juxtapose Map Comparison</title>
     <style>
-        /* General Styles */
+        /* General Page Styling */
         body {
             margin: 0;
             padding: 0;
@@ -13,23 +13,23 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #f5f5f5;
+            background-color: #f9fafc;
         }
 
-        /* Juxtapose Container */
+        /* Juxtapose Container Styling */
         #juxtapose-wrapper {
             max-width: 90vw;
             max-height: 80vh;
             width: 800px;
             height: 600px;
             margin: auto;
-            border: 2px solid #ccc;
+            border: 1px solid #ccc;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
         }
 
-        /* Juxtapose Customizations */
+        /* Juxtapose Custom Styles */
         .jx-knightlab {
             visibility: visible;
         }
@@ -39,7 +39,7 @@
         }
 
         .jx-handle {
-            color: #486382;
+            color: #2a4d69;
         }
 
         .jx-controller {
@@ -48,10 +48,18 @@
 
         .jx-image .jx-label {
             font-size: 1.2em !important;
-            background: rgba(72, 99, 130, 0.8);
+            background: rgba(42, 77, 105, 0.8);
             color: white;
             padding: 5px 10px;
             border-radius: 4px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            #juxtapose-wrapper {
+                width: 95vw;
+                height: 50vh;
+            }
         }
     </style>
     <script src="https://cdn.knightlab.com/libs/juxtapose/latest/js/juxtapose.min.js"></script>
@@ -59,6 +67,7 @@
 </head>
 <body>
 
+<!-- Juxtapose Map -->
 <div id="juxtapose-wrapper" class="juxtapose" 
      data-showlabels="true" 
      data-animate="true" 
@@ -70,4 +79,5 @@
 
 </body>
 </html>
+
 
